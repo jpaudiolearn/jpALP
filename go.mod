@@ -1,4 +1,4 @@
-module github.com/codechrysalis/go.pokemon-api
+module github.com/japaudio/JapALP
 
 require (
 	github.com/gin-contrib/sse v0.0.0-20190125020943-a7658810eb74 // indirect
