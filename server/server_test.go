@@ -27,7 +27,7 @@ var _ = Describe("Server", func() {
 	BeforeEach(func() {
 		router = CreateRouter()
 		// Since we modify lists in memory, we need to restore them to a clean state before every test
-		data.Reload()
+		// data.Reload()
 	})
 
 	Describe("Version 1 API at /api/v1", func() {
@@ -42,6 +42,12 @@ var _ = Describe("Server", func() {
 
 			It("Returns the String 'Hello World'", func() {
 				Expect(response.Body.String()).To(Equal("Hello World"))
+			})
+		})
+
+		Describe("The text to speech", func() {
+			It("Returns 0", func() {
+				Expect(TextToSpeech("Hello world", "en")).To(Equal(0))
 			})
 		})
 
