@@ -1,16 +1,20 @@
 version: 2
 jobs:
+
   build:
     docker:
       - image: debian:stretch
-
     steps:
       - checkout
-
       - run:
-          name: Greeting
-          command: echo Hello, world.
+          name: Run Build
+          command: go build
 
+  test:
+    docker:
+      - image: debian:stretch
+    steps:
+      - checkout
       - run:
-          name: Print the Current Time
-          command: date
+          name: Run Tests
+          command: go test ./...
