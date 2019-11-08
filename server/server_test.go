@@ -26,8 +26,6 @@ var _ = Describe("Server", func() {
 
 	BeforeEach(func() {
 		router = CreateRouter()
-		// Since we modify lists in memory, we need to restore them to a clean state before every test
-		data.Reload()
 	})
 
 	Describe("Version 1 API at /api/v1", func() {
