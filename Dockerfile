@@ -21,9 +21,11 @@ ENV GOPATH=$HOME/go
 
 ENV PATH=$PATH:/usr/local/go/bin
 
-RUN mkdir $GOPATH/src/com.jpaudio.api
+RUN mkdir $GOPATH/src/github.com && \
+    mkdir $GOPATH/src/github.com/jpaudio && \
+    mkdir $GOPATH/src/github.com/japaudio/JapALP
 
-WORKDIR $GOPATH/src/com.jpaudio.api
+WORKDIR $GOPATH/src/github.com/japaudio/JapALP
 
 ADD ./* ./
 
