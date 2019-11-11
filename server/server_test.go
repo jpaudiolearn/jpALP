@@ -51,6 +51,12 @@ var _ = Describe("Server", func() {
 			})
 		})
 
+		Describe("The text to speech", func() {
+			It("Returns 0", func() {
+				Expect(TextToSpeech("人生の目的は何ですか", "ja")).To(Equal(0))
+			})
+		})
+
 		/*
 			Describe("Speech to Text - English", func() {
 				It("Reads Hello World", func() {
