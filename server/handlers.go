@@ -23,7 +23,7 @@ func outputAPI(c *gin.Context) {
 }
 
 func inputForm(c *gin.Context) {
-	//c.HTML(http.StatusOK, "inputForm.html", gin.H{"title": "Take a Test"})
+
 	japaneseWord := c.PostForm("japaneseWord")
 	englishWord := c.PostForm("englishWord")
 	word := db.WordPair{EN: englishWord, JP: japaneseWord}
@@ -35,7 +35,7 @@ func inputForm(c *gin.Context) {
 		fmt.Println("insert")
 		c.String(200, "inserted data")
 	} else {
-		fmt.Println(err.Error)
+
 		c.String(200, "error")
 	}
 }
