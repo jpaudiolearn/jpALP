@@ -3,4 +3,7 @@ build:
 	docker volume create jpaudio-db
 
 run:
-	docker run -v jpaudio:/data/db -p 8080:8080 -it aryon/go-mongo
+	docker run -v jpaudio:/data/db -p 8080:8080 -it aryon/go-mongo bash -c "./start.sh"
+
+test:
+	docker run -v jpaudio:/data/db -p 8080:8080 -it aryon/go-mongo bash -c "./testing.sh"

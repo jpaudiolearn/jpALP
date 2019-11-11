@@ -10,4 +10,10 @@ echo go version
 
 nohup mongod > /var/log/mongo.log &
 
-go run .
+#
+# for test
+#
+
+cd db
+
+go test

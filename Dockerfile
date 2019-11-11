@@ -10,8 +10,6 @@ RUN apt update && apt upgrade -y &&\
 
 RUN mkdir /data && mkdir /data/db
 
-VOLUME /data/db
-
 RUN apt update && apt install -y software-properties-common && apt update && \
     add-apt-repository ppa:longsleep/golang-backports && apt update && \
     apt install golang-go git vim -y && \
@@ -22,13 +20,13 @@ ENV GOPATH=$HOME/go
 ENV PATH=$PATH:/usr/local/go/bin
 
 RUN mkdir $GOPATH/src/github.com && \
-    mkdir $GOPATH/src/github.com/jpaudio && \
+    mkdir $GOPATH/src/github.com/japaudio && \
     mkdir $GOPATH/src/github.com/japaudio/JapALP
 
 WORKDIR $GOPATH/src/github.com/japaudio/JapALP
 
-ADD ./* ./
+ADD ./ ./
 
 RUN go get
 
-CMD ["./start.sh"]
+# CMD ["./start.sh"]
