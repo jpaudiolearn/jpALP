@@ -26,6 +26,8 @@ var _ = Describe("Server", func() {
 
 	BeforeEach(func() {
 		router = CreateRouter()
+		// Since we modify lists in memory, we need to restore them to a clean state before every test
+		// data.Reload()
 	})
 
 	Describe("Version 1 API at /api/v1", func() {
@@ -42,6 +44,40 @@ var _ = Describe("Server", func() {
 				Expect(response.Body.String()).To(Equal("Hello World"))
 			})
 		})
+
+		Describe("The text to speech", func() {
+			It("Returns 0", func() {
+				Expect(TextToSpeech("Hello world", "en")).To(Equal(0))
+			})
+		})
+
+		Describe("The text to speech", func() {
+			It("Returns 0", func() {
+				Expect(TextToSpeech("人生の目的は何ですか", "ja")).To(Equal(0))
+			})
+		})
+
+		/*
+			Describe("Speech to Text - English", func() {
+				It("Reads Hello World", func() {
+					Expect(SpeechToText(
+						"audio/HelloWorld.flac",
+						"en",
+						8000,
+					)).To(Equal("hello world"))
+				})
+			})
+
+			Describe("Speech to Text - Japanese", func() {
+				It("Reads 人生の目的は何ですか", func() {
+					Expect(SpeechToText(
+						"audio/人生の目的は何ですか.flac",
+						"ja",
+						8000,
+					)).To(Equal("人生の目的は何ですか"))
+				})
+			})
+		*/
 
 	})
 })
