@@ -72,5 +72,14 @@ var _ = Describe("DB", func() {
 			})
 		})
 
+		Describe("Find N Word", func() {
+			It("Should be successful", func() {
+				ls, err := db.FindNWord(cl, 3)
+				Expect(err).Should(BeNil())
+				Expect(len(ls)).Should(Equal(3))
+				log.Println(ls)
+			})
+		})
+
 	})
 })
