@@ -3,13 +3,17 @@ $(document).ready(function(){
       $("#main").toggleClass("hidden");
       $("#form-bg").toggleClass("hidden");
     });
-    $("#test-arena, test-arena").click(function(){
+    $("#test-arena").click(function(){
         $("#main").toggleClass("hidden");
-        $(".secondary").toggleClass("hidden");
+        $("#ouput-audio").toggleClass("hidden");
     });
     $("#home").click(function(){
         $("#main").toggleClass("hidden");
         if(!$("#form-bg").hasClass("hidden"))
+        {
+            $("#form-bg").toggleClass("hidden")
+        }
+        else if(!$("#ouput-audio").hasClass("hidden"))
         {
             $("#form-bg").toggleClass("hidden")
         }

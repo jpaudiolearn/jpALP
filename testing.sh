@@ -14,6 +14,5 @@ nohup mongod > /var/log/mongo.log &
 # for test
 #
 
-#cd db
-
+#scd db
 go test ./...

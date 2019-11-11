@@ -39,10 +39,6 @@ var _ = Describe("Server", func() {
 			It("Returns with Status 200", func() {
 				Expect(response.Code).To(Equal(200))
 			})
-
-			It("Returns the String 'Hello World'", func() {
-				Expect(response.Body.String()).To(Equal("Hello World"))
-			})
 		})
 
 		Describe("The text to speech", func() {
