@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <script>
+            var counter = 5;
+             counter = function(){
+                count--;
+                if (count == 0 ) { count = 5; }
+                document.getElementById().innerHTML = count;
+                timer = setTimeout(function(){
+                    counter();
+                }, 1000);
+            };
+        </script>
+        <title>{{.title}}</title>
+    </head>
+    <body>
+        <h1 id = "timer"></h1>
+        <h2>{{.title}}</h2>
+    </body>
+</html>
