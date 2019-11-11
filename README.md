@@ -15,6 +15,8 @@ $ make build
 $ make run
 ```
 
+Modify ./start.sh to modify start operations.
+
 Make sure ```go run .``` works on **root** of workdir
 
 ### test
@@ -22,6 +24,8 @@ Make sure ```go run .``` works on **root** of workdir
 ```sh
 $ make test
 ```
+
+Modify ./testing.sh to add more test operations.
 
 ## DB
 
