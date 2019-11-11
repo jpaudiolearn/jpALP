@@ -1,14 +1,15 @@
 package server
 
 import (
-	"fmt"
-	"io"
-	"net/http"
-	"net/url"
-	"os"
-	"os/exec"
 
 	"github.com/gin-gonic/gin"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"os/exec"
+   "net/http"
+   "net/url"
+   "io"
 )
 
 
@@ -157,4 +158,64 @@ func SpeechToText(fileDir string, lang string, sampleRate int32) string {
 	}
 	return strings.Join(answer[:], " ") //en has no spaces
 }
+
+
 */
+// Render function to be called with name of the audio files 
+//(e.g: render("a","silence","b","c","silence","d") where a,b,c,d are file names)
+
+func render(files ...string)  string{
+   
+   mydata := []byte("#mylist.txt\n")
+
+   err := ioutil.WriteFile("temp.txt",mydata,0777)
+   if err != nil {
+      fmt.Println(err)
+   }
+   
+
+   if _, err := os.Stat("mixed_output.mp3"); err == nil {
+   	err = os.Remove("mixed_output.mp3")
+   } 
+
+   fileStr := ""
+   result := "mixed_output.mp3"
+
+   for _, fileName := range files {
+   fileStr = fileStr+"file '"+fileName+".mp3'"+"\n"
+   }
+
+   f, err := os.OpenFile("temp.txt",os.O_APPEND|os.O_WRONLY, 0600)
+   if err != nil {
+      fmt.Println(err)
+   }
+   
+   if _,err = f.WriteString(fileStr);
+   if err != nil {
+      fmt.Println(err)
+   }
+
+   app := "ffmpeg"
+   arg0 := "-f"
+   arg1 := "concat"
+   arg2 := "-i"
+   arg3 := "temp.txt"
+   arg4 := "-c"
+   arg5 := "copy"
+   arg6 := "mixed_output.mp3"
+
+   cmd := exec.Command(app,arg0,arg1,arg2,arg3,arg4,arg5,arg6)
+   stdout, err := cmd.Output()
+   if err != nil {
+      fmt.Println(err)
+   }
+   
+   fmt.Println(stdout)
+   err = os.Remove("temp.txt")
+   if err != nil {
+      fmt.Println(err)
+   }
+   return result
+
+}
+
