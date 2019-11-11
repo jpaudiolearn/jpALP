@@ -1,7 +1,11 @@
 # JpALP
 
-
 ## Docker
+
+***Important**: Notice that ```start.sh``` and ```testing.sh``` could only run on enviroment with golang and MongoDB installed, 
+for ecample, in ```./Dockerfile``` built Docker container. Otherwise should use ```make *```.*
+
+To run the application, you could first **build** the app, then **run** or **test**. It's recommended to use ```make *```. You can make modifications by modifying ```Makefile```.
 
 ### build
 
@@ -15,9 +19,7 @@ $ make build
 $ make run
 ```
 
-Modify ./start.sh to modify start operations.
-
-Make sure ```go run .``` works on **root** of workdir
+Modify ./start.sh to change start operations.
 
 ### test
 
@@ -27,7 +29,7 @@ $ make test
 
 Modify ./testing.sh to add more test operations.
 
-## DB
+## DB interface
 
 ```go
 client, err := db.GetClient()
@@ -39,6 +41,7 @@ pair = db.WordPair{
 }
 _id, err := db.InsertWord(cl, &pair)
 res, err := db.FindWordPairByEN(cl, "hello")
+// res should be same with pair
 ```
 
 ### GetClient
