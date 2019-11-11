@@ -1,19 +1,20 @@
 package server
 
 import (
-
-	"github.com/gin-gonic/gin"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
-   "net/http"
-   "net/url"
-   "io"
+
+	"github.com/japaudio/JapALP/db"
+
+	"github.com/gin-gonic/gin"
 )
 
-
-func hello(c *gin.Context) {
+func homePage(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{})
 }
 
@@ -25,7 +26,18 @@ func inputForm(c *gin.Context) {
 	//c.HTML(http.StatusOK, "inputForm.html", gin.H{"title": "Take a Test"})
 	japaneseWord := c.PostForm("japaneseWord")
 	englishWord := c.PostForm("englishWord")
-	c.String(200, japaneseWord+"###"+englishWord)
+	word := db.WordPair{EN: englishWord, JP: japaneseWord}
+	client := db.GetClient()
+	cl, err := db.LoadTextColl(client, "./db/config.yml")
+	_, err = db.InsertWord(cl, &word)
+	fmt.Println()
+	if err == nil {
+		fmt.Println("insert")
+		c.String(200, "inserted data")
+	} else {
+		fmt.Println(err.Error)
+		c.String(200, "error")
+	}
 }
 
 // Speech struct
@@ -161,60 +173,57 @@ func SpeechToText(fileDir string, lang string, sampleRate int32) string {
 
 
 */
-// Render function to be called with name of the audio files 
+// Render function to be called with name of the audio files
 //(e.g: render("a","silence","b","c","silence","d") where a,b,c,d are file names)
 
-func render(files ...string)  string{
-   
-   mydata := []byte("#mylist.txt\n")
+func render(files ...string) string {
 
-   err := ioutil.WriteFile("temp.txt",mydata,0777)
-   if err != nil {
-      fmt.Println(err)
-   }
-   
+	mydata := []byte("#mylist.txt\n")
 
-   if _, err := os.Stat("mixed_output.mp3"); err == nil {
-   	err = os.Remove("mixed_output.mp3")
-   } 
+	err := ioutil.WriteFile("temp.txt", mydata, 0777)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-   fileStr := ""
-   result := "mixed_output.mp3"
+	if _, err := os.Stat("mixed_output.mp3"); err == nil {
+		err = os.Remove("mixed_output.mp3")
+	}
 
-   for _, fileName := range files {
-   fileStr = fileStr+"file '"+fileName+".mp3'"+"\n"
-   }
+	fileStr := ""
+	result := "mixed_output.mp3"
 
-   f, err := os.OpenFile("temp.txt",os.O_APPEND|os.O_WRONLY, 0600)
-   if err != nil {
-      fmt.Println(err)
-   }
-   
-   if _,err = f.WriteString(fileStr); err != nil {
-      fmt.Println(err)
-   }
+	for _, fileName := range files {
+		fileStr = fileStr + "file '" + fileName + ".mp3'" + "\n"
+	}
 
-   app := "ffmpeg"
-   arg0 := "-f"
-   arg1 := "concat"
-   arg2 := "-i"
-   arg3 := "temp.txt"
-   arg4 := "-c"
-   arg5 := "copy"
-   arg6 := "mixed_output.mp3"
+	f, err := os.OpenFile("temp.txt", os.O_APPEND|os.O_WRONLY, 0600)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-   cmd := exec.Command(app,arg0,arg1,arg2,arg3,arg4,arg5,arg6)
-   stdout, err := cmd.Output()
-   if err != nil {
-      fmt.Println(err)
-   }
-   
-   fmt.Println(stdout)
-   err = os.Remove("temp.txt")
-   if err != nil {
-      fmt.Println(err)
-   }
-   return result
+	if _, err = f.WriteString(fileStr); err != nil {
+		fmt.Println(err)
+	}
 
+	app := "ffmpeg"
+	arg0 := "-f"
+	arg1 := "concat"
+	arg2 := "-i"
+	arg3 := "temp.txt"
+	arg4 := "-c"
+	arg5 := "copy"
+	arg6 := "mixed_output.mp3"
+
+	cmd := exec.Command(app, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
+	stdout, err := cmd.Output()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(stdout)
+	err = os.Remove("temp.txt")
+	if err != nil {
+		fmt.Println(err)
+	}
+	return result
 }
-
