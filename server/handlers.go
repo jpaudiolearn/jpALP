@@ -14,15 +14,6 @@ func hello(c *gin.Context) {
 }
 
 
-// Function to Test for errors
-func check_err(err error) {
-	if err != nil {
-		fmt.Println(err)
-		//os.Exit(1)
-	}
-}
-
-
 // Render function to be called with name of the audio files 
 //(e.g: render("a","silence","b","c","silence","d") where a,b,c,d are file names)
 
@@ -31,7 +22,10 @@ func render(files ...string)  string{
    mydata := []byte("#mylist.txt\n")
 
    err := ioutil.WriteFile("temp.txt",mydata,0777)
-   check_err(err)
+   if err != nil {
+      fmt.Println(err)
+   }
+   
 
    if _, err := os.Stat("mixed_output.mp3"); err == nil {
    	err = os.Remove("mixed_output.mp3")
@@ -45,10 +39,13 @@ func render(files ...string)  string{
    }
 
    f, err := os.OpenFile("temp.txt",os.O_APPEND|os.O_WRONLY, 0600)
-   check_err(err)
+   if err != nil {
+      fmt.Println(err)
+   }
    
-   if _,err = f.WriteString(fileStr); err!= nil {
-   	panic(err)
+   if _,err = f.WriteString(fileStr);
+   if err != nil {
+      fmt.Println(err)
    }
 
    app := "ffmpeg"
@@ -62,10 +59,15 @@ func render(files ...string)  string{
 
    cmd := exec.Command(app,arg0,arg1,arg2,arg3,arg4,arg5,arg6)
    stdout, err := cmd.Output()
-   check_err(err)
+   if err != nil {
+      fmt.Println(err)
+   }
+   
    fmt.Println(stdout)
    err = os.Remove("temp.txt")
-   check_err(err)
+   if err != nil {
+      fmt.Println(err)
+   }
    return result
 
 }
