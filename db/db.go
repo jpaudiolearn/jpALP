@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -163,4 +164,34 @@ func findWordPair(cl *mongo.Collection, filter bson.D) (*WordPair, error) {
 		return nil, err
 	}
 	return &result, nil
+}
+
+// FindNWord returns N word pairs
+func FindNWord(cl *mongo.Collection, N int) (ls []WordPair, err error) {
+	cur, err := cl.Aggregate(context.Background(), []bson.M{{"$sample": bson.M{"size": N}}})
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(cur)
+	defer cur.Close(context.Background())
+	for cur.Next(context.Background()) {
+
+		result := struct {
+			EN string
+			JP string
+		}{}
+		err := cur.Decode(&result)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		ls = append(ls, result)
+
+	}
+	if err := cur.Err(); err != nil {
+		return nil, err
+	}
+
+	return ls, nil
 }

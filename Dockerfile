@@ -8,11 +8,10 @@ RUN apt update && apt upgrade -y &&\
     echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.2.list && \
     apt update && apt upgrade -y && apt install mongodb-org -y
 
-RUN mkdir /data && mkdir /data/db
-
 RUN apt update && apt install -y software-properties-common && apt update && \
+    add-apt-repository ppa:jonathonf/ffmpeg-4 && apt update && \
     add-apt-repository ppa:longsleep/golang-backports && apt update && \
-    apt install golang-go git vim -y && \
+    apt install golang-go git vim ffmpeg -y && \
     mkdir $HOME/go && mkdir $HOME/go/src 
 
 ENV GOPATH=$HOME/go
