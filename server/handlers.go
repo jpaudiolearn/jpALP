@@ -190,8 +190,7 @@ func render(files ...string)  string{
       fmt.Println(err)
    }
    
-   if _,err = f.WriteString(fileStr);
-   if err != nil {
+   if _,err = f.WriteString(fileStr); err != nil {
       fmt.Println(err)
    }
 
