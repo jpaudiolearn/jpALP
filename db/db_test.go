@@ -44,7 +44,7 @@ var _ = Describe("DB", func() {
 
 		Describe("Insert One Word", func() {
 			It("Should be successful", func() {
-				pair := db.WordPair{EN: "hello", JP: "こんにちは"}
+				pair := db.WordPair{EN: "world", JP: "世界"}
 				_id, err := db.InsertWord(cl, &pair)
 				log.Printf("inserted id: %s", _id)
 				Expect(err).Should(BeNil())
@@ -52,24 +52,22 @@ var _ = Describe("DB", func() {
 		})
 
 		Describe("Find One Word Pair", func() {
-			// 	pair := db.WordPair{EN: "hello", JP: "こんにちは"}
+			// 	pair := db.WordPair{EN: "world", JP: "世界"}
 			// 	_, _ = db.InsertWord(cl, &pair)
 
-			It("Should find JP こんにちは", func() {
-				res, err := db.FindWordPairByEN(cl, "hello")
+			It("Should find JP 世界", func() {
+				res, err := db.FindWordPairByEN(cl, "world")
 				Expect(err).Should(BeNil())
 				Expect(res).Should(Equal(&db.WordPair{
-					EN: "hello",
-					JP: "こんにちは",
+					EN: "world", JP: "世界",
 				}))
 			})
 
-			It("Should find EN hello", func() {
-				res, err := db.FindWordPairByJP(cl, "こんにちは")
+			It("Should find EN world", func() {
+				res, err := db.FindWordPairByJP(cl, "世界")
 				Expect(err).Should(BeNil())
 				Expect(res).Should(Equal(&db.WordPair{
-					EN: "hello",
-					JP: "こんにちは",
+					EN: "world", JP: "世界",
 				}))
 			})
 		})

@@ -97,6 +97,7 @@ func LoadTextColl(c *mongo.Client, fileDir string) (*mongo.Collection, error) {
 // InsertWord inserts one object to DB and returns _id
 func InsertWord(cl *mongo.Collection, o *WordPair) (interface{}, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
 	res, err := cl.InsertOne(ctx, bson.M{
 		"EN": o.EN,
 		"JP": o.JP,
@@ -106,9 +107,33 @@ func InsertWord(cl *mongo.Collection, o *WordPair) (interface{}, error) {
 		return nil, err
 	}
 
-	id := res.InsertedID
+	return res.InsertedID, nil
+}
 
-	return id, nil
+// UpdateWord updates single word
+func UpdateWord(cl *mongo.Collection, o *WordPair) error {
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	filter := bson.M{
+		"EN": o.EN,
+	}
+	update := bson.M{
+		"$set": bson.M{
+			"EN": o.EN,
+			"JP": o.JP,
+		},
+	}
+	opt := options.FindOneAndUpdateOptions{}
+	flag := true
+	opt.Upsert = &flag
+
+	res := cl.FindOneAndUpdate(ctx, filter, update, &opt)
+
+	if res.Err() != nil {
+		return res.Err()
+	}
+
+	return nil
 }
 
 // FindWordPairByEN returns word pair according to english word
