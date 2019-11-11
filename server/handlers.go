@@ -18,7 +18,7 @@ func hello(c *gin.Context) {
 func check_err(err error) {
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		//os.Exit(1)
 	}
 }
 
