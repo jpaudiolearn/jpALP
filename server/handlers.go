@@ -8,7 +8,14 @@ import (
 	"os"
 	"os/exec"
 
+	"context"
+	"io/ioutil"
+	"strings"
+
 	"github.com/gin-gonic/gin"
+
+	speech "cloud.google.com/go/speech/apiv1"
+	speechpb "google.golang.org/genproto/googleapis/cloud/speech/v1"
 )
 
 // var pokemonList = data.Pokemon().List
@@ -24,7 +31,7 @@ type Speech struct {
 }
 
 // Speak downloads speech and plays it using mplayer
-func (speech *Speech) speak(text string) error {
+func (speech *Speech) Speak(text string) error {
 
 	fileName := speech.Folder + "/" + text + ".mp3"
 
@@ -93,6 +100,58 @@ func TextToSpeech(text, lang string) int {
 	  Returns -> None
 	*/
 	speech := Speech{Folder: "audio", Language: lang}
-	speech.speak(text)
+	speech.Speak(text)
 	return 0
+}
+
+//
+func SpeechToText(fileDir string, lang string, sampleRate int32) string {
+	/*
+		Performs Speech to Text on an FLAC file
+		Input : fileDirectory, language of input, sample rate of input
+		Return: string of words in input file
+
+		REQUIRES:
+			We need to add the variable to enable the Google Speech to Text api.
+			export GOOGLE_APPLICATION_CREDENTIALS=/Users/deddy/Documents/GitHub/jpALP/data/speechToText.json
+	*/
+	// creating the context and client
+	ctx := context.Background()
+	client, err := speech.NewClient(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// Getting the audio file
+	audioData, err := ioutil.ReadFile(fileDir)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	response, err := client.Recognize(ctx, &speechpb.RecognizeRequest{
+		Config: &speechpb.RecognitionConfig{
+			Encoding:        speechpb.RecognitionConfig_FLAC,
+			SampleRateHertz: sampleRate,
+			LanguageCode:    lang,
+		},
+		Audio: &speechpb.RecognitionAudio{
+			AudioSource: &speechpb.RecognitionAudio_Content{Content: audioData},
+		},
+	})
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var answer []string
+	for _, result := range response.Results {
+		for _, alt := range result.Alternatives {
+			// fmt.Println(alt.Transcript)
+			answer = append(answer, alt.Transcript)
+		}
+	}
+	if lang == "ja" {
+		return strings.Join(strings.Fields(strings.Join(answer[:], "")), "") // remove all white spaces
+	}
+	return strings.Join(answer[:], " ") //en has no spaces
 }
