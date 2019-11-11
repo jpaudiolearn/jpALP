@@ -1,20 +1,21 @@
 version: 2
 jobs:
-
   build:
     docker:
-      - image: debian:stretch
+      - image: circleci/golang:1.12
     steps:
       - checkout
-      - run:
-          name: Run Build
-          command: go build
-
+      - run: go build
   test:
     docker:
-      - image: debian:stretch
+      - image: circleci/golang:1.12
     steps:
       - checkout
-      - run:
-          name: Run Tests
-          command: go test ./...
+      - run: go test ./...
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test
