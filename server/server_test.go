@@ -51,25 +51,27 @@ var _ = Describe("Server", func() {
 			})
 		})
 
-		Describe("Speech to Text - English", func() {
-			It("Reads Hello World", func() {
-				Expect(SpeechToText(
-					"audio/HelloWorld.flac",
-					"en",
-					8000,
-				)).To(Equal("hello world"))
+		/*
+			Describe("Speech to Text - English", func() {
+				It("Reads Hello World", func() {
+					Expect(SpeechToText(
+						"audio/HelloWorld.flac",
+						"en",
+						8000,
+					)).To(Equal("hello world"))
+				})
 			})
-		})
 
-		Describe("Speech to Text - Japanese", func() {
-			It("Reads 人生の目的は何ですか", func() {
-				Expect(SpeechToText(
-					"audio/人生の目的は何ですか.flac",
-					"ja",
-					8000,
-				)).To(Equal("人生の目的は何ですか"))
+			Describe("Speech to Text - Japanese", func() {
+				It("Reads 人生の目的は何ですか", func() {
+					Expect(SpeechToText(
+						"audio/人生の目的は何ですか.flac",
+						"ja",
+						8000,
+					)).To(Equal("人生の目的は何ですか"))
+				})
 			})
-		})
+		*/
 
 	})
 })

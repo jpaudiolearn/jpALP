@@ -8,18 +8,10 @@ import (
 	"os"
 	"os/exec"
 
-	"context"
-	"io/ioutil"
-	"strings"
-
 	"github.com/gin-gonic/gin"
-
-	speech "cloud.google.com/go/speech/apiv1"
-	speechpb "google.golang.org/genproto/googleapis/cloud/speech/v1"
 )
 
 // var pokemonList = data.Pokemon().List
-
 
 func hello(c *gin.Context) {
 	c.String(200, "Hello World")
@@ -105,17 +97,16 @@ func TextToSpeech(text, lang string) int {
 	return 0
 }
 
-//
-func SpeechToText(fileDir string, lang string, sampleRate int32) string {
-	/*
-		Performs Speech to Text on an FLAC file
-		Input : fileDirectory, language of input, sample rate of input
-		Return: string of words in input file
+/*
+Performs Speech to Text on an FLAC file
+Input : fileDirectory, language of input, sample rate of input
+Return: string of words in input file
 
-		REQUIRES:
-			We need to add the variable to enable the Google Speech to Text api.
-			export GOOGLE_APPLICATION_CREDENTIALS=/Users/deddy/Documents/GitHub/jpALP/data/speechToText.json
-	*/
+REQUIRES:
+	We need to add the variable to enable the Google Speech to Text api.
+	export GOOGLE_APPLICATION_CREDENTIALS=/Users/deddy/Documents/GitHub/jpALP/data/speechToText.json
+
+func SpeechToText(fileDir string, lang string, sampleRate int32) string {
 	// creating the context and client
 	ctx := context.Background()
 	client, err := speech.NewClient(ctx)
@@ -156,3 +147,4 @@ func SpeechToText(fileDir string, lang string, sampleRate int32) string {
 	}
 	return strings.Join(answer[:], " ") //en has no spaces
 }
+*/
