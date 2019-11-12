@@ -9,6 +9,12 @@
     font-size: 2vmin;
     box-shadow: 0px 0px 10px #1ec279;
 }
+#output-audio .bottom
+{
+    position: relative;
+    margin: auto;
+    width: 100px;
+}
 #form-bg label, #form-bg input, #form-bg small, #form-bg div
 {
     padding: 10px;
