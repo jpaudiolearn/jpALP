@@ -44,6 +44,16 @@ $ make test
 
 Modify ./testing.sh to add more test operations.
 
+## Deploy
+
+Set up Google cloud CLI and select the corresponding gcp project
+
+```shell script
+export GCP_PROJ_NAME=kouzoh-p-name # insert your gcp proj name here
+gcloud builds submit --tag gcr.io/$(GCP_PROJ_NAME)/jpalp
+gcloud beta run deploy --image gcr.io/$(GCP_PROJ_NAME)/jpalp --platform managed --memory 1G
+```
+
 ## DB interface
 
 ```go
