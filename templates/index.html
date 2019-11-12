@@ -11,7 +11,7 @@
     <body id="main-page">
         <div id="main" class="container-fluid top-intro">
             <div class="top-div">
-                <p class="heading1">Welcome to JpALP - Japanese Learning Program</p>
+                <p class="heading1">Welcome to JpALP - Japanese Audio Learning Program</p>
                 <p class="heading2">The best Japanese learning app for Mercari</p> 
             </div>   
             <div class="row">
@@ -40,28 +40,19 @@
                 <label class="form-check-label" for="examplee6Check1">Check me out</label>
                 </div> -->
                 <button type="submit" id="form-submit" class="btn btn-primary">Submit</button>
-                <button type="button" id="home" class="btn btn-secondary">Home</button>
+                <button type="button" class="btn btn-secondary home">Home</button>
+                <br><div class="status"></div>
             </form>
         </div>
-        <div id="ouput-audio" class="hidden">
-            <form action="input" method="POST" id="add-new-word-form">
-                <div class="form-group">
-                <label for="japaneseWord">Japanese Word</label>
-                <input type="text" name="japaneseWord" class="form-control" id="jap" aria-describedby="emailHelp" placeholder="Enter Japanese Word">
-                <small id="wordhelp" class="form-text text-muted">Enter the new Japanese Word to add into Database</small>
-                </div>
-                <div class="form-group">
-                <label for="englishWord">English Translation</label>
-                <input type="text" name="englishWord" class="form-control" id="eng" placeholder="Enter English Translation">
-                <small id="wordhelp" class="form-text text-muted">Enter the translation for English word in Japanese</small>
-                </div>
-                <!-- <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="examplee6Check1">Check me out</label>
-                </div> -->
-                <button type="submit" id="form-submit" class="btn btn-primary">Submit</button>
-                <button type="button" id="home" class="btn btn-secondary">Home</button>
-            </form>
+        <div id="output-audio" class="hidden">
+            <div class="msg heading1"></div>
+            <!-- <div class="timer hidden" id="countdown">
+                <img src="/media/timer.gif">
+            </div> -->
+            <div class="bottom">
+                <button type="button" style="color: white;background-color: black;" class="btn btn-secondary home">Home</button>
+            </div>
+            <audio src="" id="audio" class="hidden"></audio>
         </div>
     </body>
     <script src="/js/index.js"></script>

@@ -19,7 +19,26 @@ func homePage(c *gin.Context) {
 }
 
 func outputAPI(c *gin.Context) {
-	c.HTML(http.StatusOK, "output.html", gin.H{"title": "Take a Test"})
+
+	//c.String(200, "/media/sample.mp3")
+	//client := db.GetClient()
+	//cl, err := db.LoadTextColl(client, "./db/config.yml")
+
+	word1 := db.WordPair{EN: "water", JP: "みず"}
+	//_, err = db.InsertWord(cl, &word)
+	word2 := db.WordPair{EN: "ear", JP: "みみ"}
+	//_, err = db.InsertWord(cl, &word)
+	word3 := db.WordPair{EN: "car", JP: "くるま"}
+	//_, err = db.InsertWord(cl, &word)
+	TextToSpeech(word1.EN, "en")
+	TextToSpeech(word1.JP, "ja")
+	TextToSpeech(word2.EN, "en")
+	TextToSpeech(word2.JP, "ja")
+	TextToSpeech(word3.EN, "en")
+	TextToSpeech(word3.JP, "ja")
+
+	url := render(word1.EN, word1.JP, word2.EN, word2.JP, word3.EN, word3.JP)
+	c.String(200, url)
 }
 
 func inputForm(c *gin.Context) {
@@ -59,7 +78,8 @@ func (speech *Speech) Speak(text string) error {
 		return err
 	}
 
-	return speech.play(fileName)
+	return nil
+	//return speech.play(fileName)
 }
 
 /**
@@ -109,6 +129,7 @@ func (speech *Speech) play(fileName string) error {
 	return mplayer.Run()
 }
 
+// TextToSpeech is for conveting the input text to speech for respective language
 func TextToSpeech(text, lang string) int {
 	/*
 	  Synthesizes speech from text and saves in an MP3 file.
@@ -190,10 +211,11 @@ func render(files ...string) string {
 	}
 
 	fileStr := ""
-	result := "mixed_output.mp3"
+	result := "/media/mixed_output.mp3"
 
 	for _, fileName := range files {
-		fileStr = fileStr + "file '" + fileName + ".mp3'" + "\n"
+		fileStr = fileStr + "file 'audio/" + fileName + ".mp3'" + "\n"
+		fileStr = fileStr + "file 'audio/silence.mp3'" + "\n"
 	}
 
 	f, err := os.OpenFile("temp.txt", os.O_APPEND|os.O_WRONLY, 0600)
@@ -208,22 +230,54 @@ func render(files ...string) string {
 	app := "ffmpeg"
 	arg0 := "-f"
 	arg1 := "concat"
-	arg2 := "-i"
-	arg3 := "temp.txt"
-	arg4 := "-c"
-	arg5 := "copy"
-	arg6 := "mixed_output.mp3"
+	arg2 := "-safe"
+	arg3 := "0"
+	arg4 := "-i"
+	arg5 := "temp.txt"
+	arg6 := "-c"
+	arg7 := "copy"
+	arg8 := "static/media/mixed_output.mp3"
 
-	cmd := exec.Command(app, arg0, arg1, arg2, arg3, arg4, arg5, arg6)
+	cmd := exec.Command(app, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
 	stdout, err := cmd.Output()
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	fmt.Println(stdout)
+
+	cmd = exec.Command("")
+	stdout, err = cmd.Output()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(stdout)
+
 	err = os.Remove("temp.txt")
 	if err != nil {
 		fmt.Println(err)
 	}
 	return result
+}
+
+// LoadData adds data to mongo
+func LoadData() error {
+
+	client := db.GetClient()
+	cl, err := db.LoadTextColl(client, "./db/config.yml")
+	word1 := db.WordPair{EN: "water", JP: "みず"}
+	_, err = db.InsertWord(cl, &word1)
+	if err != nil {
+		return err
+	}
+	word2 := db.WordPair{EN: "ear", JP: "みみ"}
+	_, err = db.InsertWord(cl, &word2)
+	if err != nil {
+		return err
+	}
+	word3 := db.WordPair{EN: "car", JP: "くるま"}
+	_, err = db.InsertWord(cl, &word3)
+	if err != nil {
+		return err
+	}
+	return nil
 }

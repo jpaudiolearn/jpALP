@@ -13,7 +13,6 @@ func setupRoutes(router *gin.Engine) {
 	} else {
 		router.LoadHTMLGlob("./templates/*")
 	}
-	//router.LoadHTMLGlob("./templates/*")
 	router.Static("/css", "./static/css")
 	router.Static("/js", "./static/js")
 	router.Static("/media", "./static/media")
@@ -22,6 +21,6 @@ func setupRoutes(router *gin.Engine) {
 	v1 := router.Group("/api/v1")
 
 	v1.GET("/", homePage)
-	v1.GET("/output", outputAPI)
+	v1.POST("/output", outputAPI)
 	v1.POST("/input", inputForm)
 }
