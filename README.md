@@ -12,7 +12,7 @@ The web app is simple to use. Currently, there are two options in the app:
 
 The first option allows us to add new words to the app for future recalling. The second option allows us to learn words that were added earlier. Together the two features will help anyone improve their recalling ability.
 
-##Installation Instructions
+## Installation Instructions
 
 
 ## Docker
