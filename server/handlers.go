@@ -19,7 +19,26 @@ func homePage(c *gin.Context) {
 }
 
 func outputAPI(c *gin.Context) {
-	c.HTML(http.StatusOK, "output.html", gin.H{"title": "Take a Test"})
+
+	//c.String(200, "/media/sample.mp3")
+	//client := db.GetClient()
+	//cl, err := db.LoadTextColl(client, "./db/config.yml")
+
+	word1 := db.WordPair{EN: "water", JP: "みず"}
+	//_, err = db.InsertWord(cl, &word)
+	word2 := db.WordPair{EN: "ear", JP: "みみ"}
+	//_, err = db.InsertWord(cl, &word)
+	word3 := db.WordPair{EN: "car", JP: "くるま"}
+	//_, err = db.InsertWord(cl, &word)
+	TextToSpeech(word1.EN, "en")
+	TextToSpeech(word1.JP, "ja")
+	TextToSpeech(word2.EN, "en")
+	TextToSpeech(word2.JP, "ja")
+	TextToSpeech(word3.EN, "en")
+	TextToSpeech(word3.JP, "ja")
+
+	url := render(word1.EN, word1.JP, word2.EN, word2.JP, word3.EN, word3.JP)
+	c.String(200, url)
 }
 
 func inputForm(c *gin.Context) {
@@ -59,7 +78,8 @@ func (speech *Speech) Speak(text string) error {
 		return err
 	}
 
-	return speech.play(fileName)
+	return nil
+	//return speech.play(fileName)
 }
 
 /**
@@ -109,6 +129,7 @@ func (speech *Speech) play(fileName string) error {
 	return mplayer.Run()
 }
 
+// TextToSpeech is for conveting the input text to speech for respective language
 func TextToSpeech(text, lang string) int {
 	/*
 	  Synthesizes speech from text and saves in an MP3 file.
@@ -193,7 +214,7 @@ func render(files ...string) string {
 	result := "mixed_output.mp3"
 
 	for _, fileName := range files {
-		fileStr = fileStr + "file '" + fileName + ".mp3'" + "\n"
+		fileStr = fileStr + "file 'audio/" + fileName + ".mp3'" + "\n"
 	}
 
 	f, err := os.OpenFile("temp.txt", os.O_APPEND|os.O_WRONLY, 0600)
@@ -208,7 +229,7 @@ func render(files ...string) string {
 	app := "ffmpeg"
 	arg0 := "-f"
 	arg1 := "concat"
-	arg2 := "-i"
+	arg2 := "-safe 0 -i"
 	arg3 := "temp.txt"
 	arg4 := "-c"
 	arg5 := "copy"
@@ -219,11 +240,11 @@ func render(files ...string) string {
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	fmt.Println(stdout)
-	err = os.Remove("temp.txt")
-	if err != nil {
-		fmt.Println(err)
-	}
+
+	// err = os.Remove("temp.txt")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 	return result
 }

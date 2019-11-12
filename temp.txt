@@ -1,0 +1,7 @@
+#mylist.txt
+file 'audio/water.mp3'
+file 'audio/みず.mp3'
+file 'audio/ear.mp3'
+file 'audio/みみ.mp3'
+file 'audio/car.mp3'
+file 'audio/くるま.mp3'
