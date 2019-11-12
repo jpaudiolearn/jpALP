@@ -91,6 +91,21 @@ func LoadTextColl(c *mongo.Client, fileDir string) (*mongo.Collection, error) {
 	return c.Database(cfg.DbName).Collection(cfg.Collection.Text), nil
 }
 
+// InitTextColl init the collection with some random word pairs
+func InitTextColl(cl *mongo.Collection) error {
+
+	ens := []string{"hello", "world", "dog", "airport", "today", "sky", "apartment"}
+	jps := []string{"こんにちは", "世界", "犬", "空港", "今日", "空", "アパート"}
+
+	for i := range ens {
+		_, err := InsertWord(cl, &WordPair{EN: ens[i], JP: jps[i]})
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 /*
  * MongoDB IO
  */
