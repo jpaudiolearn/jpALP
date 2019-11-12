@@ -215,6 +215,7 @@ func render(files ...string) string {
 
 	for _, fileName := range files {
 		fileStr = fileStr + "file 'audio/" + fileName + ".mp3'" + "\n"
+		fileStr = fileStr + "file 'audio/silence.mp3'" + "\n"
 	}
 
 	f, err := os.OpenFile("temp.txt", os.O_APPEND|os.O_WRONLY, 0600)
@@ -256,4 +257,27 @@ func render(files ...string) string {
 		fmt.Println(err)
 	}
 	return result
+}
+
+// LoadData adds data to mongo
+func LoadData() error {
+
+	client := db.GetClient()
+	cl, err := db.LoadTextColl(client, "./db/config.yml")
+	word1 := db.WordPair{EN: "water", JP: "みず"}
+	_, err = db.InsertWord(cl, &word1)
+	if err != nil {
+		return err
+	}
+	word2 := db.WordPair{EN: "ear", JP: "みみ"}
+	_, err = db.InsertWord(cl, &word2)
+	if err != nil {
+		return err
+	}
+	word3 := db.WordPair{EN: "car", JP: "くるま"}
+	_, err = db.InsertWord(cl, &word3)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -45,8 +45,9 @@ function outputAudio(audio){
     var posting = $.post("/api/v1/output", function(response)
     {
         $("#output-audio .msg").html("created the test...Start now");
-        alert(response);
-        audio.setAttribute("src",response)
+        //alert(response);
+        //audio.setAttribute("src","/media/sample.mp3");
+        audio.setAttribute("src","/media/mixed_output.mp3");
         audio.load();
         audio.play();
     });
