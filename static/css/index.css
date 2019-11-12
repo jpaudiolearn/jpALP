@@ -12,8 +12,21 @@
 #output-audio .bottom
 {
     position: relative;
+    top: 2vmin;
+    width: auto;
+    height: auto;
+}
+#output-audio .timer
+{
+    position: relative;
     margin: auto;
-    width: 100px;
+    width: 200px;
+    height: 200px;
+}
+#output-audio .timer img
+{
+    position: relative;
+    margin: auto;
 }
 #form-bg label, #form-bg input, #form-bg small, #form-bg div
 {
