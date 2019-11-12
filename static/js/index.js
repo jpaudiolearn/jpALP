@@ -31,11 +31,35 @@ $(document).ready(function(){
         var $form = $(this),
         data = $form.serialize(),
         url = $form.attr('action');
+        regEx_jp = /[一-龠]+|[ぁ-ゔ]+|[ァ-ヴー]+[々〆〤]+/;
+        regEx_en = /[a-zA-Z0-9]+|[ａ-ｚＡ-Ｚ０-９]+/;
+        jp = $('input[name="japaneseWord"]').val();
+        en = $('input[name="englishWord"]').val();
+        if(!regEx_jp.test(jp))
+        {
+            $.alert({
+                title: 'Alert!',
+                content: 'enter proper japanese word',
+            });
+            return false;
+        }
+        else if(!regEx_en.test(en))
+        {
+            $.alert({
+                title: 'Alert!',
+                content: 'enter proper english word',
+            });
+            return false;
+        }
         $(".status").html("<p>contacting database</p>")
         /* Send the data using post */
         var posting = $.post(url, data, function(response)
         {
-            $(".status").html("<p>"+response+"</p>")
+            $(".status").html("<p>"+response+"</p>");
+            $.alert({
+                title: 'Success!',
+                content: 'Inserted Data',
+            });
         });
     });
 });
@@ -45,9 +69,7 @@ function outputAudio(audio){
     var posting = $.post("/api/v1/output", function(response)
     {
         $("#output-audio .msg").html("created the test...Start now");
-        //alert(response);
-        //audio.setAttribute("src","/media/sample.mp3");
-        audio.setAttribute("src","/media/mixed_output.mp3");
+        audio.setAttribute("src",response);
         audio.load();
         audio.play();
     });

@@ -20,25 +20,43 @@ func homePage(c *gin.Context) {
 
 func outputAPI(c *gin.Context) {
 
-	//c.String(200, "/media/sample.mp3")
-	//client := db.GetClient()
-	//cl, err := db.LoadTextColl(client, "./db/config.yml")
+	client := db.GetClient()
+	cl, err := db.LoadTextColl(client, "./db/config.yml")
 
-	word1 := db.WordPair{EN: "water", JP: "みず"}
-	//_, err = db.InsertWord(cl, &word)
-	word2 := db.WordPair{EN: "ear", JP: "みみ"}
-	//_, err = db.InsertWord(cl, &word)
-	word3 := db.WordPair{EN: "car", JP: "くるま"}
-	//_, err = db.InsertWord(cl, &word)
-	TextToSpeech(word1.EN, "en")
-	TextToSpeech(word1.JP, "ja")
-	TextToSpeech(word2.EN, "en")
-	TextToSpeech(word2.JP, "ja")
-	TextToSpeech(word3.EN, "en")
-	TextToSpeech(word3.JP, "ja")
+	if err != nil {
+		fmt.Println("could not load" + err.Error())
+		return
+	}
 
-	url := render(word1.EN, word1.JP, word2.EN, word2.JP, word3.EN, word3.JP)
-	c.String(200, url)
+	listOfWords, err := db.FindNWord(cl, 3)
+	if err != nil {
+		fmt.Println("could not find n words" + err.Error())
+		return
+	}
+
+	// var listOfWords []db.WordPair
+	// word1 := db.WordPair{EN: "water", JP: "みず"}
+	// word2 := db.WordPair{EN: "ear", JP: "みみ"}
+	// word3 := db.WordPair{EN: "car", JP: "くるま"}
+	// listOfWords = append(listOfWords, word1)
+	// listOfWords = append(listOfWords, word2)
+	// listOfWords = append(listOfWords, word3)
+
+	var files []string
+
+	for i := range listOfWords {
+		fmt.Println(listOfWords[i].EN)
+		TextToSpeech(listOfWords[i].EN, "en")
+		TextToSpeech(listOfWords[i].JP, "ja")
+		files = append(files, listOfWords[i].EN)
+		files = append(files, "silence_5s")
+		files = append(files, listOfWords[i].JP)
+		files = append(files, "silence_2s")
+	}
+
+	urlstring := render(files)
+	fmt.Println(urlstring)
+	c.String(200, urlstring)
 }
 
 func inputForm(c *gin.Context) {
@@ -197,7 +215,7 @@ func SpeechToText(fileDir string, lang string, sampleRate int32) string {
 // Render function to be called with name of the audio files
 //(e.g: render("a","silence","b","c","silence","d") where a,b,c,d are file names)
 
-func render(files ...string) string {
+func render(files []string) string {
 
 	mydata := []byte("#mylist.txt\n")
 
@@ -215,7 +233,6 @@ func render(files ...string) string {
 
 	for _, fileName := range files {
 		fileStr = fileStr + "file 'audio/" + fileName + ".mp3'" + "\n"
-		fileStr = fileStr + "file 'audio/silence.mp3'" + "\n"
 	}
 
 	f, err := os.OpenFile("temp.txt", os.O_APPEND|os.O_WRONLY, 0600)
