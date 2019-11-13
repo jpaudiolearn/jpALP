@@ -34,14 +34,6 @@ func outputAPI(c *gin.Context) {
 		return
 	}
 
-	// var listOfWords []db.WordPair
-	// word1 := db.WordPair{EN: "water", JP: "みず"}
-	// word2 := db.WordPair{EN: "ear", JP: "みみ"}
-	// word3 := db.WordPair{EN: "car", JP: "くるま"}
-	// listOfWords = append(listOfWords, word1)
-	// listOfWords = append(listOfWords, word2)
-	// listOfWords = append(listOfWords, word3)
-
 	var files []string
 
 	for i := range listOfWords {
@@ -55,7 +47,6 @@ func outputAPI(c *gin.Context) {
 	}
 
 	urlstring := render(files)
-	fmt.Println(urlstring)
 	c.String(200, urlstring)
 }
 
@@ -67,9 +58,7 @@ func inputForm(c *gin.Context) {
 	client := db.GetClient()
 	cl, err := db.LoadTextColl(client, "./db/config.yml")
 	_, err = db.InsertWord(cl, &word)
-	fmt.Println()
 	if err == nil {
-		fmt.Println("insert")
 		c.String(200, "inserted data")
 	} else {
 
@@ -97,7 +86,6 @@ func (speech *Speech) Speak(text string) error {
 	}
 
 	return nil
-	//return speech.play(fileName)
 }
 
 /**
@@ -274,27 +262,4 @@ func render(files []string) string {
 		fmt.Println(err)
 	}
 	return result
-}
-
-// LoadData adds data to mongo
-func LoadData() error {
-
-	client := db.GetClient()
-	cl, err := db.LoadTextColl(client, "./db/config.yml")
-	word1 := db.WordPair{EN: "water", JP: "みず"}
-	_, err = db.InsertWord(cl, &word1)
-	if err != nil {
-		return err
-	}
-	word2 := db.WordPair{EN: "ear", JP: "みみ"}
-	_, err = db.InsertWord(cl, &word2)
-	if err != nil {
-		return err
-	}
-	word3 := db.WordPair{EN: "car", JP: "くるま"}
-	_, err = db.InsertWord(cl, &word3)
-	if err != nil {
-		return err
-	}
-	return nil
 }
