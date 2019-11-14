@@ -59,7 +59,7 @@ var _ = Describe("DB", func() {
 				res, err := db.FindWordPairByEN(cl, "world")
 				Expect(err).Should(BeNil())
 				Expect(res).Should(Equal(&db.WordPair{
-					EN: "worlds", JP: "世界",
+					EN: "world", JP: "世界",
 				}))
 			})
 
