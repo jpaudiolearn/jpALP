@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -16,6 +17,19 @@ import (
 
 func homePage(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{})
+}
+
+func translateText(c *gin.Context) {
+	var text string
+	var translatedText string
+	textData, _ := c.GetRawData()
+	json.Unmarshal(textData, &text)
+	lang, err := translate.detectLanguage(text)
+	if err != nil {
+		translatedText = translate.translateText(lang.Language, text)
+		c.JSON(http.StatusOK, translatedText)
+	}
+	c.JSON(http.StatusBadRequest, translatedText)
 }
 
 func outputAPI(c *gin.Context) {
