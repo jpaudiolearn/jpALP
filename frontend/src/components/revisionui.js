@@ -15,6 +15,7 @@ export default class RevisionUI extends Component {
         ],
         num_words_revised: 0,
     };
+    this.speech = new Speech()
   }
 
   componentDidMount() {
@@ -23,11 +24,10 @@ export default class RevisionUI extends Component {
   }
 
   sayWords = (text, lang) => {
-    const speech = new Speech()
-    speech.setVolume(1)
-    speech.setLanguage(lang)
-    speech.setRate(1) 
-    speech.speak({
+    this.speech.setVolume(1)
+    this.speech.setLanguage(lang)
+    this.speech.setRate(1) 
+    this.speech.speak({
         text: text,
     }).then(() => {
         console.log("Success !")
@@ -44,6 +44,10 @@ export default class RevisionUI extends Component {
         this.state.num_words_revised += 1
       }
       this.sayWords("Revision Done", 'en-US') 
+  }
+
+  returnHome = () => {
+    this.speech.cancel()
   }
 
 
@@ -79,7 +83,7 @@ export default class RevisionUI extends Component {
               </div>
               <div style={textStyle}>
                 <Link to={'/homepage'}>
-                    <Button variant="contained" type="primary">
+                    <Button variant="contained" type="primary" onClick={this.returnHome}>
                         homepage
                     </Button>
                 </Link>
