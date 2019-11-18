@@ -4,8 +4,8 @@ import '../startup.css';
 import axios from 'axios';
 import SpeechRecognition from "react-speech-recognition";
 import PropTypes from "prop-types";
-import Speech from 'react-speech';
-import { Button } from 'antd'
+import Speech from 'speak-tts'
+import { Button} from 'antd'
 import 'antd/dist/antd.css'
 import { Link } from "react-router-dom";
 
@@ -29,8 +29,31 @@ class WordInputUI extends Component {
     };
   }
 
-  processWord = () => {
-      console.log("Processing word...")
+  sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  sayWord = (word, lang) => {
+    const speech = new Speech()
+    speech.setVolume(0.5)
+    speech.setLanguage(lang)
+    speech.setRate(1) 
+    speech.speak({
+        text: word,
+    }).then(() => {
+        console.log("Success !")
+    }).catch(e => {
+        console.error("An error occurred :", e)
+    })
+  }
+
+  processWord = (word) => {
+      this.sayWord("Adding..", 'en-US')
+      this.sayWord(word, 'en-US')
+      this.sayWord("which in japanese is", 'en-US')
+      // TODO: Get the translation
+      this.sayWord("こんにちは", 'ja-JP')
+      // TODO: add to database
   }
 
   changeFSMState = () => {
@@ -51,7 +74,7 @@ class WordInputUI extends Component {
                     this.setState({
                         inputState: FSMStates.LISTENING,
                         displayText: "Say, \"Add a word\""
-                    }, () => {this.processWord()})
+                    }, () => {this.processWord(this.state.currentTranscript)})
                 }
                 else {
                     console.log(this.state)

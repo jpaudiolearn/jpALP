@@ -18,7 +18,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "react-speech": "^1.0.2",
-    "react-speech-recognition": "^2.0.4"
+    "react-speech-recognition": "^2.0.4",
+    "speak-tts": "^2.0.8"
   },
   "scripts": {
     "start": "react-scripts start",
