@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const { Option } = Select
 
-export default class VocabTestUI extends Component {
+export default class VocabTestStartUI extends Component {
   constructor(props) {
     super(props);
     this.state = {

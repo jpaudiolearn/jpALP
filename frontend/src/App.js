@@ -3,7 +3,7 @@ import './App.css';
 import LoginUI from './components/loginui'
 import HomePageUI from './components/homepageui'
 import WordInputUI from './components/wordinputui'
-import VocabTestUI from './components/vocabteststartui'
+import VocabTestStartUI from './components/vocabteststartui'
 import RevisionUI from './components/revisionui'
 import { Route, Router, Switch } from 'react-router-dom';
 import { historyMP } from './helper/history';
@@ -19,7 +19,7 @@ class App extends Component {
           <LoginRoute path="/login" component={LoginUI} />
           <PrivateRoute path="/homepage" component={HomePageUI} />
           <PrivateRoute path="/wordinput" component={WordInputUI} />
-          <PrivateRoute path="/vocabtest" component={VocabTestUI} />
+          <PrivateRoute path="/vocabtest" component={VocabTestStartUI} />
           <PrivateRoute path="/revision" component={RevisionUI} />
 
           <Route exact component={LoginUI} />
