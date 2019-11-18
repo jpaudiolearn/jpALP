@@ -36,7 +36,7 @@ export default class HomePageUI extends Component {
                     </Button>
                 </Link>
                 <br/> <br/>
-                <Link to={'/vocabtest'}>
+                <Link to={'/vocabteststart'}>
                     <Button variant="contained" type="primary">
                         Test your vocab
                     </Button>

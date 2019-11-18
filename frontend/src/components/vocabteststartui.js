@@ -41,19 +41,19 @@ export default class VocabTestStartUI extends Component {
 
     const homeStyle = {
       position: "absolute",
-      left: "940px",
-      top: "800px",
+      left: "1030px",
+      top: "720px",
     } 
 
     const timeStyle = {
       position: "absolute",
       left: "940px",
-      top: "630px",
+      top: "670px",
     } 
     const startStyle = {
       position: "absolute",
-      left: "950px",
-      top: "700px",
+      left: "900px",
+      top: "720px",
     } 
     return (
           <div>
@@ -62,10 +62,11 @@ export default class VocabTestStartUI extends Component {
               </div>
               <div style={cardStyle}>
                   <Card title="Instructions" hoverable>
-                      <p>1. You will first hear a English word</p>
-                      <p>2. Say the corresponding Japanese word after the beep</p>
-                      <p>3. Try to answer maximum translations in the given time</p>
-                      <p>4. Select time and start the test</p>
+                      <p>1. Make sure you are taking this test in a quiet environment</p>
+                      <p>2. You will first hear a English word</p>
+                      <p>3. Say the corresponding Japanese word after the beep</p>
+                      <p>4. Try to answer maximum translations in the given time</p>
+                      <p>5. Select time and start the test</p>
                   </Card>
               </div>
               <div style={timeStyle}>
@@ -78,7 +79,10 @@ export default class VocabTestStartUI extends Component {
               </div>
 
               <div style={startStyle}>
-                <Link to={'/homepage'}>
+                <Link to={{
+                  pathname: '/vocabtest',
+                  state: {testTime: this.state.testTime * 60}
+                }}>
                     <Button variant="contained" type="primary">
                         Start Test
                     </Button>
