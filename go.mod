@@ -20,6 +20,7 @@ require (
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a // indirect
 	golang.org/x/text v0.3.2
 	google.golang.org/api v0.13.0
+	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/yaml.v2 v2.2.5
 )
 
