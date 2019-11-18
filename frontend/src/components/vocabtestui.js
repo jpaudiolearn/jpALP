@@ -6,6 +6,7 @@ import Speech from 'speak-tts'
 import ReactCountdownClock from "react-countdown-clock"
 import SpeechRecognition from "react-speech-recognition";
 import PropTypes from "prop-types";
+import cookie from 'react-cookies';
 
 class VocabTestUI extends Component {
   constructor(props) {
@@ -25,14 +26,34 @@ class VocabTestUI extends Component {
     this.timer = null
   }
 
+  getAllWords = () => {
+    let url = `http://35.190.224.222:8080/api/v1/words/${cookie.load('username')}`;
+    let wordPairsArr = []
+    axios.get(url, { headers: {'Content-Type': "application/json"}})
+          .then(response => {
+                return response.data
+          }).then(wordPairsData => {
+                wordPairsData.map((value, index) => {
+                    let wordPair = {
+                      'en': value.EN,
+                      'jp': value.JP,
+                    }
+                    wordPairsArr.push(wordPair)
+                })
+                this.setState({
+                  wordPairs: wordPairsArr
+                }, () => {this.askQuestion()})
+          })
+  }
+
   componentDidMount() {
-    // TODO getAllWordPairs
     window.onbeforeunload = () => {
         return "Dude, are you sure you want to leave? Think of the kittens!";
     }
     this.props.recognition.lang = 'ja-JP'
     this.props.startListening()
-    this.askQuestion()
+    // this.askQuestion()
+    this.getAllWords()
   }
 
   getNewWord = (s1, s2) => {
@@ -128,6 +149,16 @@ class VocabTestUI extends Component {
   timeCompleteCallBack = () => {
     clearTimeout(this.timer)
     this.speech.cancel()
+    let url = `http://35.190.224.222:8080/api/v1/testInput`;
+    let wordPairData = {
+        'TotalQ': this.state.totalQues,
+        'CorrectA': this.state.correctAns,
+        'UserID': cookie.load('username') 
+    }
+    axios.post(url, wordPairData, { headers: {'Content-Type': "application/json"}})
+    .then(response => {
+            console.log(response)
+    })
     this.props.history.push('/vocabtestresult')
   }
 
