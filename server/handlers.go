@@ -117,6 +117,20 @@ func getTests(c *gin.Context) {
 	}
 }
 
+func getWords(c *gin.Context) {
+	user_id := c.Param("user_id")
+
+	client := db.GetClient()
+	cl, _ := db.LoadTextColl(client, "./db/config.yml")
+	res, e := db.GetWords(cl, user_id)
+	if e == nil {
+		c.JSON(200, res)
+	} else {
+		c.String(200, "error")
+	}
+
+}
+
 // Speech struct
 type Speech struct {
 	Folder   string

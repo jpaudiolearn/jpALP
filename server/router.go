@@ -27,6 +27,7 @@ func setupRoutes(router *gin.Engine) {
 
 	v1.POST("/testInput", inputTestDb)
 	v1.GET("users/:user_id/tests", getTests)
+	v1.GET("/words/:user_id", getWords)
 
 	v1.GET("/translate/:text", translateTextHandler)
 }

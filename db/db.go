@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"sort"
 	"time"
 
 	"io/ioutil"
@@ -197,6 +198,37 @@ func GetTests(cl *mongo.Collection, o string) (interface{}, error) {
 		ret = append(ret, p)
 	}
 	fmt.Println("queried data from db")
+	return ret, nil
+}
+
+func GetWords(cl *mongo.Collection, o string) (interface{}, error) {
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	fmt.Println("userID in GetWords " + o)
+
+	result, err := cl.Find(ctx, bson.M{"UserID": o})
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("\n result TYPE:", reflect.TypeOf(result))
+	fmt.Println("\n result: ", result)
+
+	var ret []WordPair
+	for result.Next(ctx) {
+		var p WordPair
+
+		if err := result.Decode(&p); err != nil {
+			fmt.Println(err)
+			continue
+		}
+		fmt.Printf("\n WordPair: %+v \n", p)
+		ret = append(ret, p)
+	}
+	sort.Slice(ret, func(i, j int) bool {
+		return ret[i].WE > ret[j].WE
+	})
+
+	fmt.Println("quried for words")
 	return ret, nil
 }
 
