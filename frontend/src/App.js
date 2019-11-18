@@ -3,7 +3,7 @@ import './App.css';
 import LoginUI from './components/loginui'
 import HomePageUI from './components/homepageui'
 import WordInputUI from './components/wordinputui'
-import VocabTestUI from './components/vocabtestui'
+import VocabTestUI from './components/vocabteststartui'
 import RevisionUI from './components/revisionui'
 import { Route, Router, Switch } from 'react-router-dom';
 import { historyMP } from './helper/history';
