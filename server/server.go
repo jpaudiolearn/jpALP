@@ -22,7 +22,7 @@ func CreateRouter() *gin.Engine {
 func StartServer(router *gin.Engine) {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "8000"
 	}
 
 	srv := &http.Server{

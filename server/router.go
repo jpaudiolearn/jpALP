@@ -9,7 +9,7 @@ func setupRoutes(router *gin.Engine) {
 	// Mapping html and css files to gin
 	//fmt.Println(gin.Mode())
 	if mode := gin.Mode(); mode == gin.DebugMode {
-		router.LoadHTMLGlob("../templates/*")
+		router.LoadHTMLGlob("./templates/*")
 	} else {
 		router.LoadHTMLGlob("./templates/*")
 	}
@@ -24,5 +24,5 @@ func setupRoutes(router *gin.Engine) {
 	v1.GET("/", homePage)
 	v1.POST("/output", outputAPI)
 	v1.POST("/input", inputForm)
-	v1.GET("/translate", translateText)
+	v1.GET("/translate/:word", translateTextByWord)
 }
