@@ -3,6 +3,7 @@ import LoginForm from './LoginForm';
 import '../startup.css';
 import axios from 'axios';
 import cookie from 'react-cookies'
+import SignInSide from './SignInSide'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
