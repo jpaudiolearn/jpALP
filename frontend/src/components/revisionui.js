@@ -43,9 +43,7 @@ export default class RevisionUI extends Component {
   }
 
   componentDidMount() {
-    // TODO getAllWords
     this.getAllWords()
-    // this.reviseOneWord()
   }
 
   sayWords = (text, lang) => {
