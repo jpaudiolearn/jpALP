@@ -126,8 +126,9 @@ class VocabTestUI extends Component {
   
 
   timeCompleteCallBack = () => {
-      this.props.history.push('/vocabtestresult')
-      this.speech.cancel()
+    clearTimeout(this.timer)
+    this.speech.cancel()
+    this.props.history.push('/vocabtestresult')
   }
 
 
@@ -162,19 +163,10 @@ class VocabTestUI extends Component {
                                 size={300}
                                 onComplete={this.timeCompleteCallBack} />
             </div>
-              
-              <div>
-                    {/* <h1 style={h1Style}> Number of words revised = {this.state.num_words_revised} </h1> */}
-              </div>
               <div style={textStyle}>
-                <Link to={{
-                    pathname: 'vocabtestresult',
-                    state: {},
-                }}>
-                    <Button variant="contained" type="danger">
-                        End Test
-                    </Button>
-                </Link>
+                <Button variant="contained" type="danger" onClick={this.timeCompleteCallBack}>
+                    End Test
+                </Button>
               </div>
           </div>
     );
