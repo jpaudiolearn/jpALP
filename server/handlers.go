@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"strconv"
 
 	"github.com/japaudio/JapALP/db"
 
@@ -15,7 +16,7 @@ import (
 )
 
 func homePage(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", gin.H{})
+	c.String(http.StatusOK, "Hello jpAlp")
 }
 
 func translateTextHandler(c *gin.Context) {
@@ -26,7 +27,7 @@ func translateTextHandler(c *gin.Context) {
 	if err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
-	} 
+	}
 	c.JSON(http.StatusOK, translatedText)
 }
 
@@ -66,7 +67,8 @@ func inputForm(c *gin.Context) {
 
 	japaneseWord := c.PostForm("japaneseWord")
 	englishWord := c.PostForm("englishWord")
-	word := db.WordPair{EN: englishWord, JP: japaneseWord}
+	userId := c.PostForm("user_id")
+	word := db.WordPair{EN: englishWord, JP: japaneseWord, UserID: userId}
 	client := db.GetClient()
 	cl, err := db.LoadTextColl(client, "./db/config.yml")
 	_, err = db.InsertWord(cl, &word)
@@ -76,6 +78,93 @@ func inputForm(c *gin.Context) {
 
 		c.String(200, "error")
 	}
+}
+
+func inputTestDb(c *gin.Context) {
+	total_ques := c.PostForm("totalQues")
+	correct_ans := c.PostForm("correctAns")
+	user_id := c.PostForm("userId")
+
+	total_que, _ := strconv.Atoi(total_ques)
+	correct_an, _ := strconv.Atoi(correct_ans)
+
+	if total_que < correct_an {
+		c.String(200, "test data inconsistent")
+		return
+	}
+
+	data := db.TestDb{TotalQ: total_que, CorrectA: correct_an, UserID: user_id}
+	client := db.GetClient()
+	cl, err := db.LoadTestColl(client, "./db/config.yml")
+	_, err = db.InsertTest(cl, &data)
+	if err == nil {
+		c.String(200, "test data inserted")
+	} else {
+		c.String(200, "error")
+	}
+}
+
+func getTests(c *gin.Context) {
+	user_id := c.Param("user_id")
+
+	client := db.GetClient()
+	cl, _ := db.LoadTestColl(client, "./db/config.yml")
+	res, e := db.GetTests(cl, user_id)
+	if e == nil {
+		c.JSON(200, res)
+	} else {
+		c.String(200, "error")
+	}
+}
+
+func getWords(c *gin.Context) {
+	user_id := c.Param("user_id")
+
+	client := db.GetClient()
+	cl, _ := db.LoadTextColl(client, "./db/config.yml")
+	res, e := db.GetWords(cl, user_id)
+	if e == nil {
+		c.JSON(200, res)
+	} else {
+		c.String(200, "error")
+	}
+
+}
+
+func wrongWord(c *gin.Context) {
+	var data []db.WrongObj
+	if err := c.BindJSON(&data); err != nil {
+		c.JSON(400, gin.H{"error": err})
+		return
+	}
+
+	client := db.GetClient()
+	cl, _ := db.LoadTextColl(client, "./db/config.yml")
+	e := db.WrongUpdate(cl, data)
+	if e == nil {
+		c.String(200, "wrong words updated")
+	} else {
+		c.String(200, "error for wrongWord")
+	}
+
+	c.JSON(200, data)
+}
+func testDB(c *gin.Context) {
+	client := db.GetClient()
+	cl, err := db.LoadTextColl(client, "./db/config.yml")
+
+	if err != nil {
+		fmt.Println("could not load" + err.Error())
+		return
+	}
+
+	listOfWords, err := db.FindNWord(cl, 100)
+	if err != nil {
+		fmt.Println("could not find n words" + err.Error())
+		return
+	}
+
+	c.JSON(200, listOfWords)
 }
 
 // Speech struct

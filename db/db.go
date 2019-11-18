@@ -5,6 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
+	"reflect"
+	"sort"
 	"time"
 
 	"io/ioutil"
@@ -18,6 +21,7 @@ import (
 
 type collectionConfig struct {
 	Text string `yaml:"text"`
+	Test string `yaml:"test"`
 }
 
 type config struct {
@@ -25,15 +29,30 @@ type config struct {
 	Collection collectionConfig `yaml:"collection"`
 }
 
-// WordPair consists of an English and Japanese word pair
+// WordPair consists of an English, Japanese and WEight
 type WordPair struct {
-	EN string
-	JP string
+	EN     string
+	JP     string
+	WE     int
+	UserID string
+}
+
+type TestDb struct {
+	UserID   string
+	TotalQ   int
+	CorrectA int
+}
+
+type WrongObj struct {
+	EN     string
+	UserID string
 }
 
 // GetClient returns client of MongoDB
 func GetClient() *mongo.Client {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	url := "mongodb://" + os.Getenv("DB_HOST") + ":27017"
+	fmt.Println("@zkl:", url)
+	clientOptions := options.Client().ApplyURI(url)
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
 		log.Fatal(err)
@@ -91,6 +110,21 @@ func LoadTextColl(c *mongo.Client, fileDir string) (*mongo.Collection, error) {
 	return c.Database(cfg.DbName).Collection(cfg.Collection.Text), nil
 }
 
+// LoadTestColl returns Test collection based on config
+func LoadTestColl(c *mongo.Client, fileDir string) (*mongo.Collection, error) {
+	cfg, err := loadConfig(fileDir)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if c == nil {
+		return nil, errors.New("can not load database without Client")
+	}
+
+	return c.Database(cfg.DbName).Collection(cfg.Collection.Test), nil
+}
+
 // InitTextColl init the collection with some random word pairs
 func InitTextColl(cl *mongo.Collection) error {
 
@@ -115,15 +149,121 @@ func InsertWord(cl *mongo.Collection, o *WordPair) (interface{}, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 
 	res, err := cl.InsertOne(ctx, bson.M{
-		"EN": o.EN,
-		"JP": o.JP,
+		"EN":     o.EN,
+		"JP":     o.JP,
+		"WE":     1,
+		"UserID": o.UserID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("InsertWord in db.go")
+	fmt.Println(res.InsertedID)
+	return res.InsertedID, nil
+}
+
+// InsertTest inserts one object to DB and returns _id
+func InsertTest(cl *mongo.Collection, o *TestDb) (interface{}, error) {
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	res, err := cl.InsertOne(ctx, bson.M{
+		"TotalQ":   o.TotalQ,
+		"CorrectA": o.CorrectA,
+		"UserID":   o.UserID,
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
+	fmt.Println("InsertTest in db.go")
+	fmt.Println(res.InsertedID)
 	return res.InsertedID, nil
+}
+
+func GetTests(cl *mongo.Collection, o string) (interface{}, error) {
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	fmt.Println("user_id in getTests " + o)
+
+	// var result []TestDb
+	result, err := cl.Find(ctx, bson.M{"UserID": o})
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("\n result TYPE:", reflect.TypeOf(result))
+	fmt.Println("\n result: ", result)
+	var ret []TestDb
+	for result.Next(ctx) {
+		var p TestDb
+
+		if err := result.Decode(&p); err != nil {
+			fmt.Println(err)
+			continue
+		}
+		fmt.Printf("\n TestDb: %+v \n", p)
+		ret = append(ret, p)
+	}
+	fmt.Println("queried data from db")
+	return ret, nil
+}
+
+func GetWords(cl *mongo.Collection, o string) (interface{}, error) {
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	fmt.Println("userID in GetWords " + o)
+
+	result, err := cl.Find(ctx, bson.M{"UserID": o})
+	if err != nil {
+		return nil, err
+	}
+
+	// fmt.Printf("\n result TYPE:", reflect.TypeOf(result))
+	fmt.Println("\n result: ", result)
+
+	var ret []WordPair
+	for result.Next(ctx) {
+		var p WordPair
+
+		if err := result.Decode(&p); err != nil {
+			fmt.Println(err)
+			continue
+		}
+		fmt.Printf("\n WordPair: %+v \n", p)
+		ret = append(ret, p)
+	}
+	sort.Slice(ret, func(i, j int) bool {
+		return ret[i].WE > ret[j].WE
+	})
+
+	fmt.Println("quried for words")
+	return ret, nil
+}
+
+func WrongUpdate(cl *mongo.Collection, o []WrongObj) error {
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	for _, v := range o {
+		filter := bson.M{
+			"EN":     v.EN,
+			"UserID": v.UserID,
+		}
+
+		update := bson.M{
+			"$inc": bson.M{
+				"WE": 1,
+			},
+		}
+		opt := options.FindOneAndUpdateOptions{}
+		flag := true
+		opt.Upsert = &flag
+		res := cl.FindOneAndUpdate(ctx, filter, update, &opt)
+
+		if res.Err() != nil {
+			return res.Err()
+		}
+	}
+	return nil
 }
 
 // UpdateWord updates single word
@@ -193,14 +333,15 @@ func FindNWord(cl *mongo.Collection, N int) (ls []WordPair, err error) {
 	for cur.Next(context.Background()) {
 
 		result := struct {
-			EN string
-			JP string
+			EN     string
+			JP     string
+			WE     int
+			UserID string
 		}{}
 		err := cur.Decode(&result)
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		ls = append(ls, result)
 
 	}
