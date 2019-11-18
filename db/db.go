@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"reflect"
 	"sort"
-	"os"
 	"time"
 
 	"io/ioutil"

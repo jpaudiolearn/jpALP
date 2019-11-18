@@ -16,7 +16,7 @@ import (
 )
 
 func homePage(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", gin.H{})
+	c.String(http.StatusOK, "Hello jpAlp")
 }
 
 func translateTextHandler(c *gin.Context) {
