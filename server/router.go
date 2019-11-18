@@ -9,7 +9,7 @@ func setupRoutes(router *gin.Engine) {
 	// Mapping html and css files to gin
 	//fmt.Println(gin.Mode())
 	if mode := gin.Mode(); mode == gin.DebugMode {
-		router.LoadHTMLGlob("../templates/*")
+		router.LoadHTMLGlob("./templates/*")
 	} else {
 		router.LoadHTMLGlob("./templates/*")
 	}

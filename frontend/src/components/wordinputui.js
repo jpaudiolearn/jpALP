@@ -52,8 +52,13 @@ class WordInputUI extends Component {
       this.sayWord("Saving..", 'en-US')
       this.sayWord(word, 'en-US')
       this.sayWord("which in japanese is", 'en-US')
-      // TODO: Get the translation
-      this.sayWord("こんにちは", 'ja-JP')
+      
+      // Now get the japanese translation
+      let url = `http://localhost:8080/api/v1/translate/${word}`;
+      axios.get(url, { headers: {'Content-Type': "application/json"}})
+          .then(response => {
+                this.sayWord(response.data, 'ja-JP')
+          })
       // TODO: add to database
       this.setState({
           isLoading: false,
