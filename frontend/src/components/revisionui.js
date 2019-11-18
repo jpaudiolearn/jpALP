@@ -13,14 +13,16 @@ export default class RevisionUI extends Component {
             {'en': 'Hello', 'jp': 'こんにちは'},
             {'en': 'Sorry', 'jp': 'ごめんなさい'},
         ],
-        num_words_revised: 0,
+        numWordsRevised: 0,
+        currWordIndex: 0,
     };
     this.speech = new Speech()
+    this.timers = []
   }
 
   componentDidMount() {
     // TODO getAllWords
-    this.Revise()
+    this.reviseOneWord()
   }
 
   sayWords = (text, lang) => {
@@ -37,17 +39,24 @@ export default class RevisionUI extends Component {
     
   }
 
-  Revise = () => {
-      for(let i=0; i<this.state.wordPairs.length; i++) {
-        this.sayWords(this.state.wordPairs[i]['en'], 'en-US')
-        this.sayWords(this.state.wordPairs[i]['jp'], 'ja-JP')
-        this.state.num_words_revised += 1
-      }
-      this.sayWords("Revision Done", 'en-US') 
+  reviseOneWord = () => {
+      this.sayWords(this.state.wordPairs[this.state.currWordIndex]['en'], 'en-US')
+      let thisPointer = this
+      this.timers.push(setTimeout(() => {
+        thisPointer.sayWords(this.state.wordPairs[this.state.currWordIndex]['jp'], 'ja-JP')
+        this.setState({
+          currWordIndex: (this.state.currWordIndex+1)%this.state.wordPairs.length,
+          numWordsRevised: this.state.numWordsRevised+1
+        })
+        thisPointer.reviseOneWord()
+      }, 4000))
   }
 
   returnHome = () => {
     this.speech.cancel()
+    for(let i=0; i<this.timers.length; i++) {
+      clearTimeout(this.timers[i])
+    }
   }
 
 
@@ -79,7 +88,7 @@ export default class RevisionUI extends Component {
                     <img src={revision}/>
               </div>
               <div>
-                    {/* <h1 style={h1Style}> Number of words revised = {this.state.num_words_revised} </h1> */}
+                    <h1 style={h1Style}> Number of words revised = {this.state.numWordsRevised} </h1>
               </div>
               <div style={textStyle}>
                 <Link to={'/homepage'}>
