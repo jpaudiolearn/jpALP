@@ -8,7 +8,6 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
-	"strconv"
 
 	"github.com/japaudio/JapALP/db"
 
@@ -88,19 +87,25 @@ func inputForm(c *gin.Context) {
 }
 
 func inputTestDb(c *gin.Context) {
-	total_ques := c.PostForm("totalQues")
-	correct_ans := c.PostForm("correctAns")
-	user_id := c.PostForm("userId")
+	// total_ques := c.PostForm("totalQues")
+	// correct_ans := c.PostForm("correctAns")
+	// user_id := c.PostForm("userId")
 
-	total_que, _ := strconv.Atoi(total_ques)
-	correct_an, _ := strconv.Atoi(correct_ans)
-
-	if total_que < correct_an {
-		c.String(200, "test data inconsistent")
+	var data db.TestDb
+	if err := c.BindJSON(&data); err != nil {
+		c.JSON(400, gin.H{"error": err})
 		return
 	}
 
-	data := db.TestDb{TotalQ: total_que, CorrectA: correct_an, UserID: user_id}
+	// total_que, _ := strconv.Atoi(total_ques)
+	// correct_an, _ := strconv.Atoi(correct_ans)
+
+	// if total_que < correct_an {
+	// 	c.String(200, "test data inconsistent")
+	// 	return
+	// }
+
+	// data := db.TestDb{TotalQ: total_que, CorrectA: correct_an, UserID: user_id}
 	client := db.GetClient()
 	cl, err := db.LoadTestColl(client, "./db/config.yml")
 	_, err = db.InsertTest(cl, &data)
