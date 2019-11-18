@@ -4,6 +4,8 @@ import revision from '../revision.png'
 import { Button } from 'antd'
 import { Link } from "react-router-dom";
 import Speech from 'speak-tts'
+import cookie from 'react-cookies';
+
 
 export default class RevisionUI extends Component {
   constructor(props) {
@@ -20,9 +22,30 @@ export default class RevisionUI extends Component {
     this.timers = []
   }
 
+  getAllWords = () => {
+    let url = `http://35.190.224.222:8080/api/v1/words/${cookie.load('username')}`;
+    let wordPairsArr = []
+    axios.get(url, { headers: {'Content-Type': "application/json"}})
+          .then(response => {
+                return response.data
+          }).then(wordPairsData => {
+                wordPairsData.map((value, index) => {
+                    let wordPair = {
+                      'en': value.EN,
+                      'jp': value.JP,
+                    }
+                    wordPairsArr.push(wordPair)
+                })
+                this.setState({
+                  wordPairs: wordPairsArr
+                }, () => {this.reviseOneWord()})
+          })
+  }
+
   componentDidMount() {
     // TODO getAllWords
-    this.reviseOneWord()
+    this.getAllWords()
+    // this.reviseOneWord()
   }
 
   sayWords = (text, lang) => {

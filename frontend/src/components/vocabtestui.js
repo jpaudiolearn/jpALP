@@ -42,14 +42,14 @@ class VocabTestUI extends Component {
 }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.finalTranscript != this.props.finalTranscript) {
-        let newWord = this.getNewWord(this.props.finalTranscript, nextProps.finalTranscript)
-
-         this.setState({
-             currentTranscript: newWord.trim().toLowerCase(),
-         },() => {this.checkAns()})
-    }
- }
+      if (nextProps.finalTranscript != this.props.finalTranscript) {
+          let newWord = this.getNewWord(this.props.finalTranscript, nextProps.finalTranscript)
+          console.log(newWord)
+          this.setState({
+              currentTranscript: newWord.trim().toLowerCase(),
+          },() => {this.checkAns()})
+      }
+  }
 
   sayWords = (text, lang) => {
     this.speech.setVolume(1)

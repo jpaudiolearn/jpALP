@@ -9,6 +9,7 @@ import { Button, Spin} from 'antd'
 import 'antd/dist/antd.css'
 import { Link } from "react-router-dom";
 import mtfuji from '../mtfuji.jpg'; 
+import cookie from 'react-cookies';
 
 
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -55,11 +56,23 @@ class WordInputUI extends Component {
       
       // Now get the japanese translation
       let url = `http://localhost:8080/api/v1/translate/${word}`;
+      let jpWord = ""
       axios.get(url, { headers: {'Content-Type': "application/json"}})
           .then(response => {
+                jpWord = response.data
                 this.sayWord(response.data, 'ja-JP')
+                url = `http://35.190.224.222:8080/api/v1/input`;
+                let wordPairData = {
+                    'EN': word,
+                    'JP': jpWord,
+                    'UserID': cookie.load('username') 
+                }
+                axios.post(url, wordPairData, { headers: {'Content-Type': "application/json"}})
+                .then(response => {
+                        console.log(response)
+                })
           })
-      // TODO: add to database
+      
       this.setState({
           isLoading: false,
           displayText: "Say, \"Add\""
