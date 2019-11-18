@@ -75,12 +75,30 @@ func inputTestDb(c *gin.Context) {
 	total_que, _ := strconv.Atoi(total_ques)
 	correct_an, _ := strconv.Atoi(correct_ans)
 
+	if total_que < correct_an {
+		c.String(200, "test data inconsistent")
+		return
+	}
+
 	data := db.TestDb{TotalQ: total_que, CorrectA: correct_an, UserID: user_id}
 	client := db.GetClient()
 	cl, err := db.LoadTestColl(client, "./db/config.yml")
 	_, err = db.InsertTest(cl, &data)
 	if err == nil {
 		c.String(200, "test data inserted")
+	} else {
+		c.String(200, "error")
+	}
+}
+
+func getTests(c *gin.Context) {
+	user_id := c.Param("user_id")
+
+	client := db.GetClient()
+	cl, _ := db.LoadTestColl(client, "./db/config.yml")
+	res, e := db.GetTests(cl, user_id)
+	if e == nil {
+		c.JSON(200, res)
 	} else {
 		c.String(200, "error")
 	}

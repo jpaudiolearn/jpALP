@@ -25,4 +25,5 @@ func setupRoutes(router *gin.Engine) {
 	v1.POST("/output", outputAPI)
 	v1.POST("/input", inputForm)
 	v1.POST("/testInput", inputTestDb)
+	v1.GET("users/:user_id/tests", getTests)
 }

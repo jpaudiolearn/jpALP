@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"reflect"
 	"time"
 
 	"io/ioutil"
@@ -168,6 +169,33 @@ func InsertTest(cl *mongo.Collection, o *TestDb) (interface{}, error) {
 	fmt.Println("InsertTest in db.go")
 	fmt.Println(res.InsertedID)
 	return res.InsertedID, nil
+}
+
+func GetTests(cl *mongo.Collection, o string) (interface{}, error) {
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	fmt.Println("user_id in getTests " + o)
+
+	// var result []TestDb
+	result, err := cl.Find(ctx, bson.M{"UserID": o})
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("\n result TYPE:", reflect.TypeOf(result))
+	fmt.Println("\n result: ", result)
+	var ret []TestDb
+	for result.Next(ctx) {
+		var p TestDb
+
+		if err := result.Decode(&p); err != nil {
+			fmt.Println(err)
+			continue
+		}
+		fmt.Printf("\n TestDb: %+v \n", p)
+		ret = append(ret, p)
+	}
+	fmt.Println("queried data from db")
+	return ret, nil
 }
 
 // UpdateWord updates single word
