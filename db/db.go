@@ -18,6 +18,7 @@ import (
 
 type collectionConfig struct {
 	Text string `yaml:"text"`
+	Test string `yaml:"test"`
 }
 
 type config struct {
@@ -25,10 +26,17 @@ type config struct {
 	Collection collectionConfig `yaml:"collection"`
 }
 
-// WordPair consists of an English and Japanese word pair
+// WordPair consists of an English, Japanese and WEight
 type WordPair struct {
 	EN string
 	JP string
+	WE int
+}
+
+type TestDb struct {
+	UserID   string
+	TotalQ   int
+	CorrectA int
 }
 
 // GetClient returns client of MongoDB
@@ -91,6 +99,21 @@ func LoadTextColl(c *mongo.Client, fileDir string) (*mongo.Collection, error) {
 	return c.Database(cfg.DbName).Collection(cfg.Collection.Text), nil
 }
 
+// LoadTestColl returns Test collection based on config
+func LoadTestColl(c *mongo.Client, fileDir string) (*mongo.Collection, error) {
+	cfg, err := loadConfig(fileDir)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if c == nil {
+		return nil, errors.New("can not load database without Client")
+	}
+
+	return c.Database(cfg.DbName).Collection(cfg.Collection.Test), nil
+}
+
 // InitTextColl init the collection with some random word pairs
 func InitTextColl(cl *mongo.Collection) error {
 
@@ -117,12 +140,33 @@ func InsertWord(cl *mongo.Collection, o *WordPair) (interface{}, error) {
 	res, err := cl.InsertOne(ctx, bson.M{
 		"EN": o.EN,
 		"JP": o.JP,
+		"WE": 1,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("InsertWord in db.go")
+	fmt.Println(res.InsertedID)
+	return res.InsertedID, nil
+}
+
+// InsertTest inserts one object to DB and returns _id
+func InsertTest(cl *mongo.Collection, o *TestDb) (interface{}, error) {
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	res, err := cl.InsertOne(ctx, bson.M{
+		"TotalQ":   o.TotalQ,
+		"CorrectA": o.CorrectA,
+		"UserID":   o.UserID,
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
+	fmt.Println("InsertTest in db.go")
+	fmt.Println(res.InsertedID)
 	return res.InsertedID, nil
 }
 
@@ -195,6 +239,7 @@ func FindNWord(cl *mongo.Collection, N int) (ls []WordPair, err error) {
 		result := struct {
 			EN string
 			JP string
+			WE int
 		}{}
 		err := cur.Decode(&result)
 		if err != nil {

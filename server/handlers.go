@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"strconv"
 
 	"github.com/japaudio/JapALP/db"
 
@@ -62,6 +63,25 @@ func inputForm(c *gin.Context) {
 		c.String(200, "inserted data")
 	} else {
 
+		c.String(200, "error")
+	}
+}
+
+func inputTestDb(c *gin.Context) {
+	total_ques := c.PostForm("totalQues")
+	correct_ans := c.PostForm("correctAns")
+	user_id := c.PostForm("userId")
+
+	total_que, _ := strconv.Atoi(total_ques)
+	correct_an, _ := strconv.Atoi(correct_ans)
+
+	data := db.TestDb{TotalQ: total_que, CorrectA: correct_an, UserID: user_id}
+	client := db.GetClient()
+	cl, err := db.LoadTestColl(client, "./db/config.yml")
+	_, err = db.InsertTest(cl, &data)
+	if err == nil {
+		c.String(200, "test data inserted")
+	} else {
 		c.String(200, "error")
 	}
 }
