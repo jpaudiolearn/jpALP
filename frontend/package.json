@@ -1,0 +1,45 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.6.1",
+    "@material-ui/icons": "^4.5.1",
+    "antd": "^3.25.2",
+    "axios": "^0.19.0",
+    "history": "^4.10.1",
+    "install": "^0.13.0",
+    "jwt-decode": "^2.2.0",
+    "npm": "^6.13.0",
+    "react": "^16.11.0",
+    "react-cookies": "^0.1.1",
+    "react-dom": "^16.11.0",
+    "react-json-to-table": "^0.1.5",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.2.0",
+    "react-speech": "^1.0.2",
+    "react-speech-recognition": "^2.0.4",
+    "speak-tts": "^2.0.8"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

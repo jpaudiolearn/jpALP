@@ -1,4 +1,4 @@
-# JpALP
+# JpALP [![CircleCI](https://circleci.com/gh/jpaudiolearn/jpALP.svg?style=svg)](https://circleci.com/gh/jpaudiolearn/jpALP)
 
 ## You have just found the jpALP!
 The jpALP (short for japanese Audio Learning Program) is an app we developed to create a platform where Japanese learners can hone their speaking abilities on their own terms.
@@ -50,8 +50,8 @@ Set up Google cloud CLI and select the corresponding gcp project
 
 ```shell script
 export GCP_PROJ_NAME=kouzoh-p-name # insert your gcp proj name here
-gcloud builds submit --tag gcr.io/$(GCP_PROJ_NAME)/jpalp
-gcloud beta run deploy --image gcr.io/$(GCP_PROJ_NAME)/jpalp --platform managed --memory 1G
+gcloud builds submit --tag gcr.io/$GCP_PROJ_NAME/jpalp
+gcloud beta run deploy --image gcr.io/$GCP_PROJ_NAME/jpalp --platform managed --memory 1G
 ```
 
 ## DB interface

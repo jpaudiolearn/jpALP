@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: circleci-cd-demo-cluster
+  labels:
+    app: simple-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ci-deploy
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: ci-deploy
+        tier: backend
+    spec:
+      containers:
+        - image: gcr.io/kouzoh-p-k-zhu/jpalp:v2
+          imagePullPolicy: Always
+          name: dominic-backend
+          ports:
+            - containerPort: 8080
+              name: ci-deploy

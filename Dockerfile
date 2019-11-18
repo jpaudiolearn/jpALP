@@ -28,4 +28,4 @@ ADD ./ ./
 
 RUN go get
 
-# CMD ["./start.sh"]
+CMD ["./start.sh"]

@@ -1,12 +1,10 @@
-version: 2
+version: 2.1
+
+orbs:
+  gcp-gke: circleci/gcp-gke@0.1.0
+  gcr: circleci/gcp-gcr@0.0.2
+
 jobs:
-  build:
-    docker:
-      - image: circleci/golang:1.12
-      - image: circleci/mongo:4.2.1
-    steps:
-      - checkout
-      - run: go build
   test:
     docker:
       - image: circleci/golang:1.12
@@ -15,9 +13,42 @@ jobs:
       - checkout
       - run: go test ./...
 
+  Build-Push-Image-Docker:
+    description: Build and push image to Google Container Registry
+    machine: true
+    steps:
+      - checkout
+      - gcr/gcr-auth
+      - run: ./build-and-deploy/build-push.sh
+
+  deploy:
+    description: Deploy application to Google Kubernetes Engine
+    machine: true
+    steps:
+      - checkout
+      # Install `gcloud` and `kubectl` if not already installed.
+      - gcp-gke/install
+      # Initialize the `gcloud` CLI.
+      - gcp-gke/init
+      - run: ./build-and-deploy/deploy.sh
+
+
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - build
       - test
+      - Build-Push-Image-Docker:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+              # only: deployment
+      - deploy:
+          requires:
+            - Build-Push-Image-Docker
+          filters:
+            branches:
+              only: master
+              # only: deployment
