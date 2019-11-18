@@ -9,9 +9,6 @@ jobs:
     docker:
       - image: circleci/golang:1.12
       - image: circleci/mongo:4.2.1
-        # environment:
-        #   DB_HOST: localhost
-
     steps:
       - checkout
       - run: go test ./...

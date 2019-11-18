@@ -1,0 +1,11 @@
+FROM golang:1.13-alpine AS builder
+
+RUN mkdir -p /go/src/github.com/jpaudiolearn/jpALP
+
+WORKDIR /go/src/github.com/jpaudiolearn/jpALP
+
+ADD . .
+
+RUN go get -d && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
+
+CMD ["./app"] 

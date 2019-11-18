@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jpalp-backend-deployment
+  labels:
+    app: jpalp-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jpalp-backend
+  template:
+    metadata:
+      labels:
+        app: jpalp-backend
+    spec:
+      containers:
+      - name: jpalp-backend
+        image: gcr.io/kouzoh-p-k-zhu/jpalp-backend:v2
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+        env:
+        - name: DB_HOST
+          value: mongo-service
+        # - name: MYSQL_PORT
+        #   value: "3306"
+        # - name: MYSQL_ROOT_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: db-secret
+        #       key: mysql-password
+        # - name: MYSQL_DATABASE
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: db-secret
+        #       key: database
+

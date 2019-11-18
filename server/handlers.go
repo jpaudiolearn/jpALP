@@ -66,6 +66,24 @@ func inputForm(c *gin.Context) {
 	}
 }
 
+func testDB(c *gin.Context) {
+	client := db.GetClient()
+	cl, err := db.LoadTextColl(client, "./db/config.yml")
+
+	if err != nil {
+		fmt.Println("could not load" + err.Error())
+		return
+	}
+
+	listOfWords, err := db.FindNWord(cl, 100)
+	if err != nil {
+		fmt.Println("could not find n words" + err.Error())
+		return
+	}
+
+	c.JSON(200, listOfWords)
+}
+
 // Speech struct
 type Speech struct {
 	Folder   string
