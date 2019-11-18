@@ -36,7 +36,7 @@ export default class LoginUI extends Component {
 
   handle_login = (e, data) => {
     e.preventDefault();
-    fetch('http://localhost:8080/token-auth', {
+    fetch('http://localhost:8081/token-auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
