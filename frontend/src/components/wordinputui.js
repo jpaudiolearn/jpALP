@@ -8,6 +8,7 @@ import Speech from 'speak-tts'
 import { Button, Spin} from 'antd'
 import 'antd/dist/antd.css'
 import { Link } from "react-router-dom";
+import mtfuji from '../mtfuji.jpg'; 
 
 
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -107,27 +108,33 @@ class WordInputUI extends Component {
   }
 
   render() {
-    //   const inputStyle = {
-    //     backgroundImage: 'url(https://source.unsplash.com/random)',
-    //     backgroundPosition: 'center',
-    //     backgroundSize: 'cover',
-    //     backgroundRepeat: 'no-repeat'
-    //   }
-    const inputStyle = {
+      const imageStyle = {
+        maxHeight: "100%",
+        maxWidth: "100%",
+      }
+
+      const h1Style =  {
+        fontSize: "62px"
+      }
+    const textStyle = {
         position: "absolute",
-        left: "710px",
-        top: "400px",
+        left: "810px",
+        top: "200px",
+
     } 
       return (
-        <div style={inputStyle}>
+        <div>
             <Spin tip="Saving word..." spinning={this.state.isLoading} delay={500}>
-                <h1>{this.state.displayText}</h1>
-                <br/><br/><br/>
-                <Link to={'/homepage'}>
-                    <Button variant="contained" type="primary">
-                        homepage
-                    </Button>
-                </Link>
+                <img src={mtfuji} style={imageStyle}/>
+                <div style={textStyle}>
+                    <h1 style={h1Style}>{this.state.displayText}</h1>
+                    <br/><br/><br/>
+                    <Link to={'/homepage'}>
+                        <Button variant="contained" type="primary">
+                            homepage
+                        </Button>
+                    </Link>
+                </div>
             </Spin>
         </div>
 
