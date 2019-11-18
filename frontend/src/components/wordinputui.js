@@ -35,13 +35,12 @@ class WordInputUI extends Component {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  sayWord = (word, lang) => {
+  sayWord = (text, lang) => {
     const speech = new Speech()
     speech.setVolume(1)
     speech.setLanguage(lang)
-    speech.setRate(1) 
     speech.speak({
-        text: word,
+        text: text,
     }).then(() => {
         console.log("Success !")
     }).catch(e => {
