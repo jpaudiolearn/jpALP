@@ -7,6 +7,7 @@ import (
 	"log"
 	"reflect"
 	"sort"
+	"os"
 	"time"
 
 	"io/ioutil"
@@ -49,7 +50,9 @@ type WrongObj struct {
 
 // GetClient returns client of MongoDB
 func GetClient() *mongo.Client {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	url := "mongodb://" + os.Getenv("DB_HOST") + ":27017"
+	fmt.Println("@zkl:", url)
+	clientOptions := options.Client().ApplyURI(url)
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
 		log.Fatal(err)
