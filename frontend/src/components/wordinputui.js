@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import LoginForm from './LoginForm';
 import '../startup.css';
 import axios from 'axios';
-import cookie from 'react-cookies'
 import SpeechRecognition from "react-speech-recognition";
 import PropTypes from "prop-types";
 import Speech from 'react-speech';
+import { Button } from 'antd'
+import 'antd/dist/antd.css'
+import { Link } from "react-router-dom";
+
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -22,6 +25,7 @@ class WordInputUI extends Component {
     this.state = {
         currentTranscript: "",
         inputState: FSMStates.LISTENING,
+        displayText: "Say, \"Add a word\"",
     };
   }
 
@@ -37,6 +41,7 @@ class WordInputUI extends Component {
                     console.log("Changing state...")
                     this.setState({
                         inputState: FSMStates.WAITING_FOR_WORD,
+                        displayText: "Please say the English word you want to add"
                     })
                 }
                 break;
@@ -44,7 +49,8 @@ class WordInputUI extends Component {
                 if (this.state.inputState == FSMStates.WAITING_FOR_WORD) {
                     console.log("Changing State..")
                     this.setState({
-                        inputState: FSMStates.LISTENING
+                        inputState: FSMStates.LISTENING,
+                        displayText: "Say, \"Add a word\""
                     }, () => {this.processWord()})
                 }
                 else {
@@ -73,12 +79,29 @@ class WordInputUI extends Component {
   }
 
   render() {
+    //   const inputStyle = {
+    //     backgroundImage: 'url(https://source.unsplash.com/random)',
+    //     backgroundPosition: 'center',
+    //     backgroundSize: 'cover',
+    //     backgroundRepeat: 'no-repeat'
+    //   }
+    const inputStyle = {
+        position: "absolute",
+        left: "710px",
+        top: "400px",
+    } 
       return (
-        <div>
-        {this.state.currentTranscript}
-        <Speech 
+        <div style={inputStyle}>
+        <h1>{this.state.displayText}</h1>
+        <br/><br/><br/>
+        <Link to={'/homepage'}>
+            <Button variant="contained" type="primary">
+                homepage
+            </Button>
+        </Link>
+        {/* <Speech 
                 text="I have the default settings" 
-                volume={10}/>
+                volume={10}/> */}
         </div>
 
       )
