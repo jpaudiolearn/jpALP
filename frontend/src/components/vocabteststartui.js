@@ -29,31 +29,31 @@ export default class VocabTestStartUI extends Component {
   render() {
     const imageStyle = {
       position: "absolute",
-      left: "670px",
+      left: "30%",
     }
 
     const cardStyle = {
       position: "absolute",
-      left: "710px",
-      top: "350px",
+      left: "30%",
+      top: "37%",
       width: 600,
     }
 
     const homeStyle = {
       position: "absolute",
-      left: "1030px",
-      top: "720px",
+      left: "52%",
+      top: "90%",
     } 
 
     const timeStyle = {
       position: "absolute",
-      left: "940px",
-      top: "670px",
+      left: "47%",
+      top: "82%",
     } 
     const startStyle = {
       position: "absolute",
-      left: "900px",
-      top: "720px",
+      left: "42%",
+      top: "90%",
     } 
     return (
           <div>

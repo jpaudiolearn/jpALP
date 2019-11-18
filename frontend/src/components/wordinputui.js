@@ -30,6 +30,7 @@ class WordInputUI extends Component {
         displayText: "Say, \"Add\"",
         isLoading: false,
     };
+    this.controller = new AbortController()
   }
 
   sleep = (ms) => {
@@ -49,6 +50,19 @@ class WordInputUI extends Component {
     })
   }
 
+  postWordPair = (enWord, jpWord) => {
+    let url = `http://35.190.224.222:8080/api/v1/input`;
+    let wordPairData = {
+        'EN': enWord,
+        'JP': jpWord,
+        'UserID': cookie.load('username') 
+    }
+    axios.post(url, wordPairData, { headers: {'Content-Type': "application/json"}, signal: this.controller.signal})
+    .then(response => {
+            console.log(response)
+    })
+  }
+
   processWord = (word) => {
       this.sayWord("Saving..", 'en-US')
       this.sayWord(word, 'en-US')
@@ -57,26 +71,31 @@ class WordInputUI extends Component {
       // Now get the japanese translation
       let url = `http://localhost:8080/api/v1/translate/${word}`;
       let jpWord = ""
-      axios.get(url, { headers: {'Content-Type': "application/json"}})
+      axios.get(url, { headers: {'Content-Type': "application/json"}, signal: this.controller.signal})
           .then(response => {
                 jpWord = response.data
                 this.sayWord(response.data, 'ja-JP')
-                url = `http://35.190.224.222:8080/api/v1/input`;
-                let wordPairData = {
-                    'EN': word,
-                    'JP': jpWord,
-                    'UserID': cookie.load('username') 
-                }
-                axios.post(url, wordPairData, { headers: {'Content-Type': "application/json"}})
-                .then(response => {
-                        console.log(response)
-                })
+                this.setState({
+                    isLoading: false,
+                    displayText: "Say, \"Add\"",
+                }, () => {this.postWordPair(word, jpWord)})
+                // url = `http://35.190.224.222:8080/api/v1/input`;
+                // let wordPairData = {
+                //     'EN': word,
+                //     'JP': jpWord,
+                //     'UserID': cookie.load('username') 
+                // }
+                // axios.post(url, wordPairData, { headers: {'Content-Type': "application/json"}})
+                // .then(response => {
+                //         console.log(response)
+                //         this.setState({
+                //             isLoading: false,
+                //             displayText: "Say, \"Add\""
+                //         })
+                // })
           })
       
-      this.setState({
-          isLoading: false,
-          displayText: "Say, \"Add\""
-      })
+      
   }
 
   changeFSMState = () => {
@@ -99,9 +118,6 @@ class WordInputUI extends Component {
                         isLoading: true,
                     }, () => {this.processWord(this.state.currentTranscript)})
                 }
-                else {
-                    console.log(this.state)
-                }
             
       }
   }
@@ -114,14 +130,19 @@ class WordInputUI extends Component {
     componentWillReceiveProps(nextProps) {
        if (nextProps.finalTranscript != this.props.finalTranscript) {
            let newWord = this.getNewWord(this.props.finalTranscript, nextProps.finalTranscript)
-
-            this.setState({
-                currentTranscript: newWord.trim().toLowerCase(),
-            },() => {this.changeFSMState();})
+            if (this != null) {
+                this.setState({
+                    currentTranscript: newWord.trim().toLowerCase(),
+                },() => {this.changeFSMState();})
+            }
        }
     }
   componentDidMount() {
         this.props.startListening()
+  }
+
+  componentWillUnmount() {
+      this.controller.abort()
   }
 
   render() {
@@ -135,8 +156,14 @@ class WordInputUI extends Component {
       }
     const textStyle = {
         position: "absolute",
-        left: "810px",
-        top: "200px",
+        left: "40%",
+        top: "20%",
+
+    } 
+    const homeStyle = {
+        position: "absolute",
+        left: "45%",
+        top: "65%",
 
     } 
       return (
@@ -145,7 +172,8 @@ class WordInputUI extends Component {
                 <img src={mtfuji} style={imageStyle}/>
                 <div style={textStyle}>
                     <h1 style={h1Style}>{this.state.displayText}</h1>
-                    <br/><br/><br/>
+                    </div>
+                    <div style={homeStyle}>
                     <Link to={'/homepage'}>
                         <Button variant="contained" type="primary">
                             homepage

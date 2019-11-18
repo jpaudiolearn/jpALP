@@ -29,18 +29,18 @@ export default class HomePageUI extends Component {
     } 
     const inputStyle = {
         position: "absolute",
-        left: "510px",
-        top: "220px",
+        left: "20%",
+        top: "25%",
     } 
     const testStyle = {
         position: "absolute",
-        left: "850px",
-        top: "220px",
+        left: "45%",
+        top: "25%",
     }
     const revisionStyle = {
         position: "absolute",
-        left: "1150px",
-        top: "220px",
+        left: "70%",
+        top: "25%",
     } 
     return (
           <div>

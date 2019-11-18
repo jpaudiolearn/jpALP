@@ -167,25 +167,17 @@ class VocabTestUI extends Component {
 
 
   render() {
-    const imageStyle = {
-        position: "absolute",
-        left: "710px",
-        top: "100px",
-        maxHeight: "100%",
-        maxWidth: "100%",
-      }
-
     const textStyle = {
         position: "absolute",
-        left: "910px",
-        top: "800px",
+        left: "48%",
+        top: "80%",
 
     } 
 
     const timerStyle =  {
         position: "absolute",
-        left: "810px",
-        top: "100px",
+        left: "40%",
+        top: "10%",
         fontSize: "62px"
       }
     return (

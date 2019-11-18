@@ -18,25 +18,17 @@ export default class VocabTestResultUI extends Component {
 
 
   render() {
-    const imageStyle = {
-        position: "absolute",
-        left: "710px",
-        top: "100px",
-        maxHeight: "100%",
-        maxWidth: "100%",
-      }
-
     const textStyle = {
         position: "absolute",
-        left: "910px",
-        top: "800px",
+        left: "47%",
+        top: "60%",
 
     } 
 
     const h1Style =  {
         position: "absolute",
-        left: "710px",
-        top: "400px",
+        left: "35%",
+        top: "30%",
         fontSize: "62px"
       }
     return (

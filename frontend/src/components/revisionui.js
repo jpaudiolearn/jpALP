@@ -84,23 +84,23 @@ export default class RevisionUI extends Component {
   render() {
     const imageStyle = {
         position: "absolute",
-        left: "710px",
-        top: "100px",
+        left: "35%",
+        top: "5%",
         maxHeight: "100%",
         maxWidth: "100%",
       }
 
     const textStyle = {
         position: "absolute",
-        left: "910px",
-        top: "800px",
+        left: "50%",
+        top: "80%",
 
     } 
 
     const h1Style =  {
         position: "absolute",
-        left: "610px",
-        top: "600px",
+        left: "25%",
+        top: "60%",
         fontSize: "62px"
       }
     return (
