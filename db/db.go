@@ -29,9 +29,10 @@ type config struct {
 
 // WordPair consists of an English, Japanese and WEight
 type WordPair struct {
-	EN string
-	JP string
-	WE int
+	EN     string
+	JP     string
+	WE     int
+	UserID string
 }
 
 type TestDb struct {
@@ -139,9 +140,10 @@ func InsertWord(cl *mongo.Collection, o *WordPair) (interface{}, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 
 	res, err := cl.InsertOne(ctx, bson.M{
-		"EN": o.EN,
-		"JP": o.JP,
-		"WE": 1,
+		"EN":     o.EN,
+		"JP":     o.JP,
+		"WE":     1,
+		"UserID": o.UserID,
 	})
 
 	if err != nil {
@@ -265,15 +267,15 @@ func FindNWord(cl *mongo.Collection, N int) (ls []WordPair, err error) {
 	for cur.Next(context.Background()) {
 
 		result := struct {
-			EN string
-			JP string
-			WE int
+			EN     string
+			JP     string
+			WE     int
+			UserID string
 		}{}
 		err := cur.Decode(&result)
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		ls = append(ls, result)
 
 	}

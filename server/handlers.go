@@ -19,6 +19,18 @@ func homePage(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{})
 }
 
+func translateTextHandler(c *gin.Context) {
+	detectedLanguage := "ja"
+	textData := c.Param("text")
+	fmt.Printf("Input text: %v", textData)
+	translatedText, err := translateText(detectedLanguage, textData)
+	if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	c.JSON(http.StatusOK, translatedText)
+}
+
 func outputAPI(c *gin.Context) {
 
 	client := db.GetClient()
@@ -55,7 +67,8 @@ func inputForm(c *gin.Context) {
 
 	japaneseWord := c.PostForm("japaneseWord")
 	englishWord := c.PostForm("englishWord")
-	word := db.WordPair{EN: englishWord, JP: japaneseWord}
+	userId := c.PostForm("user_id")
+	word := db.WordPair{EN: englishWord, JP: japaneseWord, UserID: userId}
 	client := db.GetClient()
 	cl, err := db.LoadTextColl(client, "./db/config.yml")
 	_, err = db.InsertWord(cl, &word)
