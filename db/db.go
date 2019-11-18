@@ -42,6 +42,11 @@ type TestDb struct {
 	CorrectA int
 }
 
+type WrongObj struct {
+	EN     string
+	UserID string
+}
+
 // GetClient returns client of MongoDB
 func GetClient() *mongo.Client {
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
@@ -230,6 +235,32 @@ func GetWords(cl *mongo.Collection, o string) (interface{}, error) {
 
 	fmt.Println("quried for words")
 	return ret, nil
+}
+
+func WrongUpdate(cl *mongo.Collection, o []WrongObj) error {
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	for _, v := range o {
+		filter := bson.M{
+			"EN":     v.EN,
+			"UserID": v.UserID,
+		}
+
+		update := bson.M{
+			"$inc": bson.M{
+				"WE": 1,
+			},
+		}
+		opt := options.FindOneAndUpdateOptions{}
+		flag := true
+		opt.Upsert = &flag
+		res := cl.FindOneAndUpdate(ctx, filter, update, &opt)
+
+		if res.Err() != nil {
+			return res.Err()
+		}
+	}
+	return nil
 }
 
 // UpdateWord updates single word

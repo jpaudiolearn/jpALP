@@ -131,6 +131,25 @@ func getWords(c *gin.Context) {
 
 }
 
+func wrongWord(c *gin.Context) {
+	var data []db.WrongObj
+	if err := c.BindJSON(&data); err != nil {
+		c.JSON(400, gin.H{"error": err})
+		return
+	}
+
+	client := db.GetClient()
+	cl, _ := db.LoadTextColl(client, "./db/config.yml")
+	e := db.WrongUpdate(cl, data)
+	if e == nil {
+		c.String(200, "wrong words updated")
+	} else {
+		c.String(200, "error for wrongWord")
+	}
+
+	c.JSON(200, data)
+}
+
 // Speech struct
 type Speech struct {
 	Folder   string
