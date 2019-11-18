@@ -46,12 +46,14 @@ workflows:
             - test
           filters:
             branches:
-              - master
-              - deployment
+              only:
+                - master
+                - deployment
       - deploy:
           requires:
             - Build-Push-Image-Docker
           filters:
             branches:
-              - master
-              - deployment
+              only:
+                - master
+                - deployment
