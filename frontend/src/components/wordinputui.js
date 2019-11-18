@@ -159,7 +159,6 @@ WordInputUI.propTypes = {
 
   const options = {
       autoStart: false,
-    //   continuous: false,
   }
 
 export default SpeechRecognition(options)(WordInputUI);
