@@ -159,7 +159,10 @@ class VocabTestUI extends Component {
     .then(response => {
             console.log(response)
     })
-    this.props.history.push('/vocabtestresult')
+    this.props.history.push({
+      pathname: '/vocabtestresult',
+      state: {correctAns: this.state.correctAns, totalQues: this.state.totalQues}
+    })
   }
 
 

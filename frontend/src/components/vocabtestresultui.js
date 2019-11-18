@@ -35,12 +35,15 @@ export default class VocabTestResultUI extends Component {
 
     const h1Style =  {
         position: "absolute",
-        left: "610px",
-        top: "600px",
+        left: "710px",
+        top: "400px",
         fontSize: "62px"
       }
     return (
           <div>
+              <div >
+                 <h1 style={h1Style}> Your score is {this.props.location.state.correctAns}/{this.props.location.state.totalQues} </h1>
+              </div>
               <div style={textStyle}>
                 <Link to={'/homepage'}>
                     <Button variant="contained" type="primary">
