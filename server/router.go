@@ -7,12 +7,12 @@ import (
 func setupRoutes(router *gin.Engine) {
 
 	// Mapping html and css files to gin
-	//fmt.Println(gin.Mode())
-	if mode := gin.Mode(); mode == gin.DebugMode {
-		router.LoadHTMLGlob("../templates/*")
-	} else {
-		router.LoadHTMLGlob("./templates/*")
-	}
+	// fmt.Println(gin.Mode())
+	// if mode := gin.Mode(); mode == gin.DebugMode {
+	// 	 	router.LoadHTMLGlob("./templates/*")
+	// } else {
+	// 	 	router.LoadHTMLGlob("./templates/*")
+	// }
 	router.Static("/css", "./static/css")
 	router.Static("/js", "./static/js")
 	router.Static("/media", "./static/media")
@@ -24,6 +24,14 @@ func setupRoutes(router *gin.Engine) {
 	v1.GET("/", homePage)
 	v1.POST("/output", outputAPI)
 	v1.POST("/input", inputForm)
+
+	v1.POST("/testInput", inputTestDb)
+	v1.GET("users/:user_id/tests", getTests)
+	v1.GET("/words/:user_id", getWords)
+	v1.POST("words/wrongWords", wrongWord)
+
 	v1.GET("/testdb", testDB)
+
 	v1.GET("/translate/:text", translateTextHandler)
+
 }
