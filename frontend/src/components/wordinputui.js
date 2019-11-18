@@ -5,7 +5,7 @@ import axios from 'axios';
 import SpeechRecognition from "react-speech-recognition";
 import PropTypes from "prop-types";
 import Speech from 'speak-tts'
-import { Button} from 'antd'
+import { Button, Spin} from 'antd'
 import 'antd/dist/antd.css'
 import { Link } from "react-router-dom";
 
@@ -26,6 +26,7 @@ class WordInputUI extends Component {
         currentTranscript: "",
         inputState: FSMStates.LISTENING,
         displayText: "Say, \"Add a word\"",
+        isLoading: false,
     };
   }
 
@@ -35,7 +36,7 @@ class WordInputUI extends Component {
 
   sayWord = (word, lang) => {
     const speech = new Speech()
-    speech.setVolume(0.5)
+    speech.setVolume(1)
     speech.setLanguage(lang)
     speech.setRate(1) 
     speech.speak({
@@ -48,12 +49,16 @@ class WordInputUI extends Component {
   }
 
   processWord = (word) => {
-      this.sayWord("Adding..", 'en-US')
+      this.sayWord("Saving..", 'en-US')
       this.sayWord(word, 'en-US')
       this.sayWord("which in japanese is", 'en-US')
       // TODO: Get the translation
       this.sayWord("こんにちは", 'ja-JP')
       // TODO: add to database
+      this.setState({
+          isLoading: false,
+          displayText: "Say, \"Add a word\""
+      })
   }
 
   changeFSMState = () => {
@@ -73,7 +78,7 @@ class WordInputUI extends Component {
                     console.log("Changing State..")
                     this.setState({
                         inputState: FSMStates.LISTENING,
-                        displayText: "Say, \"Add a word\""
+                        isLoading: true,
                     }, () => {this.processWord(this.state.currentTranscript)})
                 }
                 else {
@@ -115,16 +120,15 @@ class WordInputUI extends Component {
     } 
       return (
         <div style={inputStyle}>
-        <h1>{this.state.displayText}</h1>
-        <br/><br/><br/>
-        <Link to={'/homepage'}>
-            <Button variant="contained" type="primary">
-                homepage
-            </Button>
-        </Link>
-        {/* <Speech 
-                text="I have the default settings" 
-                volume={10}/> */}
+            <Spin tip="Saving word..." spinning={this.state.isLoading} delay={500}>
+                <h1>{this.state.displayText}</h1>
+                <br/><br/><br/>
+                <Link to={'/homepage'}>
+                    <Button variant="contained" type="primary">
+                        homepage
+                    </Button>
+                </Link>
+            </Spin>
         </div>
 
       )
