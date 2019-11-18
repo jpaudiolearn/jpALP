@@ -20,7 +20,7 @@ jobs:
     steps:
       - checkout
       - gcr/gcr-auth
-      - run: ./build-and-deploy/build-push.sh
+      # - run: ./build-and-deploy/build-push.sh
       - run: ./scripts/build-push.sh
 
   deploy:
@@ -32,7 +32,7 @@ jobs:
       - gcp-gke/install
       # Initialize the `gcloud` CLI.
       - gcp-gke/init
-      - run: ./build-and-deploy/deploy.sh
+      # - run: ./build-and-deploy/deploy.sh
       - run: ./scripts/deploy.sh
 
 
