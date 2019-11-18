@@ -26,7 +26,7 @@ class WordInputUI extends Component {
     this.state = {
         currentTranscript: "",
         inputState: FSMStates.LISTENING,
-        displayText: "Say, \"Add a word\"",
+        displayText: "Say, \"Add\"",
         isLoading: false,
     };
   }
@@ -58,19 +58,19 @@ class WordInputUI extends Component {
       // TODO: add to database
       this.setState({
           isLoading: false,
-          displayText: "Say, \"Add a word\""
+          displayText: "Say, \"Add\""
       })
   }
 
   changeFSMState = () => {
       
       switch(this.state.currentTranscript) {
-          case "add a word":
+          case "add":
               if (this.state.inputState == FSMStates.LISTENING) {
                     console.log("Changing state...")
                     this.setState({
                         inputState: FSMStates.WAITING_FOR_WORD,
-                        displayText: "Please say the English word you want to add"
+                        displayText: "Please say your English word"
                     })
                 }
                 break;
