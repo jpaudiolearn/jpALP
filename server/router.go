@@ -1,10 +1,13 @@
 package server
 
 import (
+	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 )
 
 func setupRoutes(router *gin.Engine) {
+	router.POST("/token-auth", authMiddleware.LoginHandler)
+	router.GET("/refresh-token", authMiddleware.RefreshHandler)
 
 	// Mapping html and css files to gin
 	//fmt.Println(gin.Mode())

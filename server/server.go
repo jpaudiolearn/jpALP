@@ -8,12 +8,30 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/gin-contrib/cors"
+	"github.com/jinzhu/gorm"
 	"github.com/gin-gonic/gin"
 )
 
 // CreateRouter creates and configures a server
-func CreateRouter() *gin.Engine {
+func CreateRouter(db *gorm.DB) *gin.Engine {
 	router := gin.Default()
+	
+	router.Use(cors.New(cors.Config{
+                AllowOrigins:     []string{"*"},
+                AllowMethods:     []string{"PUT", "PATCH", "GET", "POST", "DELETE"},
+                AllowHeaders:     []string{"Origin", "Authorization", "Content-type"},
+                ExposeHeaders:    []string{"Content-Length"},
+                AllowCredentials: true,
+                MaxAge:           12 * time.Hour,
+        }))
+
+	router.Use(DB(db))
+	authMiddleware, err := GetAuthMiddleware(db)
+        if err != nil {
+                // TODO: Handle this with an HTTP response
+                log.Fatal("JWT Error:" + err.Error())
+        }
 	setupRoutes(router)
 	return router
 }
