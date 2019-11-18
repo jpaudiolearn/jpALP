@@ -48,7 +48,7 @@ workflows:
             branches:
               only:
                 - master
-                - deployment
+                # - deployment
       - deploy:
           requires:
             - Build-Push-Image-Docker
@@ -56,4 +56,4 @@ workflows:
             branches:
               only:
                 - master
-                - deployment
+                # - deployment
