@@ -18,6 +18,18 @@ func homePage(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{})
 }
 
+func translateTextHandler(c *gin.Context) {
+	detectedLanguage := "ja"
+	textData := c.Param("text")
+	fmt.Printf("Input text: %v", textData)
+	translatedText, err := translateText(detectedLanguage, textData)
+	if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	} 
+	c.JSON(http.StatusOK, translatedText)
+}
+
 func outputAPI(c *gin.Context) {
 
 	client := db.GetClient()
