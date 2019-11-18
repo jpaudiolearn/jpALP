@@ -18,9 +18,9 @@ func homePage(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{})
 }
 
-func translateTextByWord(c *gin.Context) {
+func translateTextHandler(c *gin.Context) {
 	detectedLanguage := "ja"
-	textData := c.Param("word")
+	textData := c.Param("text")
 	fmt.Printf("Input text: %v", textData)
 	translatedText, err := translateText(detectedLanguage, textData)
 	if err != nil {
