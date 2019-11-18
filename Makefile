@@ -23,8 +23,7 @@ first-clean:
 
 ##### THE LATESET VERSION OF CI/CD ##### 
 build-push:
-	./scripts/build.sh
-	./scripts/push.sh
+	./scripts/build-push.sh
 
 deploy:
 	./scripts/deploy.sh

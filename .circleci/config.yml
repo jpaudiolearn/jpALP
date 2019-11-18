@@ -9,8 +9,6 @@ jobs:
     docker:
       - image: circleci/golang:1.12
       - image: circleci/mongo:4.2.1
-        # environment:
-        #   DB_HOST: localhost
 
     steps:
       - checkout
@@ -23,6 +21,7 @@ jobs:
       - checkout
       - gcr/gcr-auth
       - run: ./build-and-deploy/build-push.sh
+      - run: ./scripts/build-push.sh
 
   deploy:
     description: Deploy application to Google Kubernetes Engine
@@ -34,6 +33,7 @@ jobs:
       # Initialize the `gcloud` CLI.
       - gcp-gke/init
       - run: ./build-and-deploy/deploy.sh
+      - run: ./scripts/deploy.sh
 
 
 workflows:
@@ -46,12 +46,12 @@ workflows:
             - test
           filters:
             branches:
-              only: master
-              # only: deployment
+              - master
+              - deployment
       - deploy:
           requires:
             - Build-Push-Image-Docker
           filters:
             branches:
-              only: master
-              # only: deployment
+              - master
+              - deployment
