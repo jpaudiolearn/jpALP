@@ -65,13 +65,20 @@ func outputAPI(c *gin.Context) {
 
 func inputForm(c *gin.Context) {
 
-	japaneseWord := c.PostForm("japaneseWord")
-	englishWord := c.PostForm("englishWord")
-	userId := c.PostForm("user_id")
-	word := db.WordPair{EN: englishWord, JP: japaneseWord, UserID: userId}
+	var data db.WordPair
+	if err := c.BindJSON(&data); err != nil {
+		c.JSON(400, gin.H{"error": err})
+		return
+	}
+
+	// japaneseWord := c.PostForm("japaneseWord")
+	// englishWord := c.PostForm("englishWord")
+	// userId := c.PostForm("user_id")
+
+	// word := db.WordPair{EN: englishWord, JP: japaneseWord, UserID: userId}
 	client := db.GetClient()
 	cl, err := db.LoadTextColl(client, "./db/config.yml")
-	_, err = db.InsertWord(cl, &word)
+	_, err = db.InsertWord(cl, &data)
 	if err == nil {
 		c.String(200, "inserted data")
 	} else {
