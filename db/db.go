@@ -218,7 +218,7 @@ func GetWords(cl *mongo.Collection, o string) (interface{}, error) {
 		return nil, err
 	}
 
-	fmt.Printf("\n result TYPE:", reflect.TypeOf(result))
+	// fmt.Printf("\n result TYPE:", reflect.TypeOf(result))
 	fmt.Println("\n result: ", result)
 
 	var ret []WordPair
