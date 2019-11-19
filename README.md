@@ -1,83 +1,57 @@
-# JpALP [![CircleCI](https://circleci.com/gh/jpaudiolearn/jpALP.svg?style=svg)](https://circleci.com/gh/jpaudiolearn/jpALP)
+# JpALP V2
+
+***
+
+[![CircleCI](https://circleci.com/gh/jpaudiolearn/jpALP.svg?style=svg)](https://circleci.com/gh/jpaudiolearn/jpALP)
+
+***
 
 ## You have just found the jpALP!
-The jpALP (short for japanese Audio Learning Program) is an app we developed to create a platform where Japanese learners can hone their speaking abilities on their own terms.
+The jpALP (short for Japanese Audio Learning Platform) is an app we developed to create a platform where Japanese learners can hone their speaking abilities on their own terms.
 
 The user is free to memorize whatever vocabulary or phrase she wants to and can summon them at a moment's whim for testing purposes. By repeatedly and actively recalling japanese words, she can become a fluent speaker in no time.
 
+***
+
 ## Getting Started
 The web app is simple to use. Currently, there are two options in the app:
-1. Add new words
-2. Test words
+1. Add a wrod
+2. Test vocab
+3. Revision
 
-The first option allows us to add new words to the app for future recalling. The second option allows us to learn words that were added earlier. Together the two features will help anyone improve their recalling ability.
+The first option allows us to add new word pairs to the app for future recalling by either text input or a cool voice input.
 
-## Installation Instructions
+The second option allows us to test vocabulary by answering the questions by voice.
 
+The third option allows us to learn words that were added earlier. 
 
-## Docker
+Together the three features will help anyone improve their recalling ability.
 
-***Important**: Notice that ```start.sh``` and ```testing.sh``` could only run on enviroment with golang and MongoDB installed, 
-for ecample, in ```./Dockerfile``` built Docker container. Otherwise should use ```make *```.*
+***
 
-To run the application, you could first **build** the app, then **run** or **test**. It's recommended to use ```make *```. You can make modifications by modifying ```Makefile```.
+## Run on your local machine without Docker
 
-### build
-
-```sh
-$ make build
+```
+git clone https://github.com/jpaudiolearn/jpALP.git
+cd jpALP
+go run .
 ```
 
-### run
+Then open another terminal in the same folder:
 
-```sh
-$ make run
+```
+cd frontend
+npm install
+npm start
 ```
 
-Modify ./start.sh to change start operations.
+You can see `http://localhost:3000/` now!
 
-### test
+***
 
-```sh
-$ make test
+## Deploy with Docker and GCP!
+
 ```
-
-Modify ./testing.sh to add more test operations.
-
-## Deploy
-
-Set up Google cloud CLI and select the corresponding gcp project
-
-```shell script
-export GCP_PROJ_NAME=kouzoh-p-name # insert your gcp proj name here
-gcloud builds submit --tag gcr.io/$GCP_PROJ_NAME/jpalp
-gcloud beta run deploy --image gcr.io/$GCP_PROJ_NAME/jpalp --platform managed --memory 1G
+make build-push
+make deploy
 ```
-
-## DB interface
-
-```go
-client, err := db.GetClient()
-coll, err := db.LoadTextColl(client)
-
-// MongoDB IO
-pair = db.WordPair{
-    EN: "hello", JP: "こんにちは"
-}
-_id, err := db.InsertWord(cl, &pair)
-res, err := db.FindWordPairByEN(cl, "hello")
-// res should be same with pair
-```
-
-### GetClient
-
-### LoadDB
-
-### LoadTextColl
-
-### InsertWord
-
-### FindWordPairByEN
-
-### FindWordPairByJP
-
