@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import revision from '../revision.png'
-import { Button, Spin} from 'antd'
+import { Button } from 'antd'
 import { Link } from "react-router-dom";
 import Speech from 'speak-tts'
+import cookie from 'react-cookies';
+
 
 export default class RevisionUI extends Component {
   constructor(props) {
@@ -13,62 +15,92 @@ export default class RevisionUI extends Component {
             {'en': 'Hello', 'jp': 'こんにちは'},
             {'en': 'Sorry', 'jp': 'ごめんなさい'},
         ],
-        num_words_revised: 0,
+        numWordsRevised: 0,
+        currWordIndex: 0,
     };
+    this.speech = new Speech()
+    this.timers = []
+  }
+
+  getAllWords = () => {
+    let url = `http://35.190.224.222:8080/api/v1/words/${cookie.load('username')}`;
+    let wordPairsArr = []
+    axios.get(url, { headers: {'Content-Type': "application/json"}})
+          .then(response => {
+                return response.data
+          }).then(wordPairsData => {
+                wordPairsData.map((value, index) => {
+                    let wordPair = {
+                      'en': value.EN,
+                      'jp': value.JP,
+                    }
+                    wordPairsArr.push(wordPair)
+                })
+                this.setState({
+                  wordPairs: wordPairsArr
+                }, () => {this.reviseOneWord()})
+          })
   }
 
   componentDidMount() {
-    // TODO getAllWords
-    this.Revise()
+    this.getAllWords()
   }
 
   sayWords = (text, lang) => {
-    const speech = new Speech()
-    speech.setVolume(1)
-    speech.setLanguage(lang)
-    speech.setRate(1) 
-    speech.speak({
+    this.speech.setVolume(1)
+    this.speech.setLanguage(lang)
+    this.speech.setRate(1) 
+    this.speech.speak({
         text: text,
     }).then(() => {
         console.log("Success !")
     }).catch(e => {
         console.error("An error occurred :", e)
     })
+    
   }
 
-  Revise = () => {
-      for(let i=0; i<this.state.wordPairs.length; i++) {
-        this.sayWords(this.state.wordPairs[i]['en'], 'en-US')
-        this.sayWords(this.state.wordPairs[i]['jp'], 'ja-JP')
-        
-        this.state.num_words_revised += 1
-      }
+  reviseOneWord = () => {
+      this.sayWords(this.state.wordPairs[this.state.currWordIndex]['en'], 'en-US')
+      let thisPointer = this
+      this.timers.push(setTimeout(() => {
+        thisPointer.sayWords(this.state.wordPairs[this.state.currWordIndex]['jp'], 'ja-JP')
+        this.setState({
+          currWordIndex: (this.state.currWordIndex+1)%this.state.wordPairs.length,
+          numWordsRevised: this.state.numWordsRevised+1
+        })
+        thisPointer.reviseOneWord()
+      }, 4000))
+  }
 
-      this.sayWords("Revision Done", 'en-US')
-    //   this.props.history.push('/homepage')
+  returnHome = () => {
+    this.speech.cancel()
+    for(let i=0; i<this.timers.length; i++) {
+      clearTimeout(this.timers[i])
+    }
   }
 
 
   render() {
     const imageStyle = {
         position: "absolute",
-        left: "710px",
-        top: "100px",
+        left: "35%",
+        top: "5%",
         maxHeight: "100%",
         maxWidth: "100%",
       }
 
     const textStyle = {
         position: "absolute",
-        left: "910px",
-        top: "800px",
+        left: "50%",
+        top: "80%",
 
     } 
 
     const h1Style =  {
         position: "absolute",
-        left: "610px",
-        top: "600px",
+        left: "25%",
+        top: "60%",
         fontSize: "62px"
       }
     return (
@@ -77,11 +109,11 @@ export default class RevisionUI extends Component {
                     <img src={revision}/>
               </div>
               <div>
-                    <h1 style={h1Style}> Number of words revised = {this.state.num_words_revised} </h1>
+                    <h1 style={h1Style}> Number of words revised = {this.state.numWordsRevised} </h1>
               </div>
               <div style={textStyle}>
                 <Link to={'/homepage'}>
-                    <Button variant="contained" type="primary">
+                    <Button variant="contained" type="primary" onClick={this.returnHome}>
                         homepage
                     </Button>
                 </Link>

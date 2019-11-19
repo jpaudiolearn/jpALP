@@ -38,7 +38,7 @@ render() {
 			<div className="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-50">
 				<form className="login100-form validate-form">
 					<span className="login100-form-title p-b-33">
-						<h4 style={merStyle}>mer-weekend</h4>
+						<h4 style={merStyle}>jpAlp</h4>
 					</span>
 
 					<div className="wrap-input100 validate-input">
