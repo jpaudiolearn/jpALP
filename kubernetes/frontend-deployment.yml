@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jpalp-frontend-deployment
+  labels:
+    app: jpalp-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jpalp-frontend
+  template:
+    metadata:
+      labels:
+        app: jpalp-frontend
+    spec:
+      containers:
+      - name: jpalp-frontend
+        image: gcr.io/kouzoh-p-k-zhu/jpalp-frontend:v2
+        ports:
+        - containerPort: 3000
+        imagePullPolicy: Always
+        env:
+        - name: HOST
+          value: "0.0.0.0"
+        - name: PORT
+          value: "3000"
+        # - name: REACT_APP_FIREBASE_API_KEY
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: frontend-secret
+        #       key: REACT_APP_FIREBASE_API_KEY
+        # - name: REACT_APP_FIREBASE_AUTH_DOMAIN
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: frontend-secret
+        #       key: REACT_APP_FIREBASE_AUTH_DOMAIN
+        # - name: REACT_APP_FIREBASE_DATABASE_URL
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: frontend-secret
+        #       key: REACT_APP_FIREBASE_DATABASE_URL
+        # - name: REACT_APP_FIREBASE_PROJECT_ID
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: frontend-secret
+        #       key: REACT_APP_FIREBASE_PROJECT_ID
+        # - name: REACT_APP_FIREBASE_STORAGE_BUCKET
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: frontend-secret
+        #       key: REACT_APP_FIREBASE_STORAGE_BUCKET
+        # - name: REACT_APP_FIREBASE_MESSAGING_SENDER_ID
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: frontend-secret
+        #       key: REACT_APP_FIREBASE_MESSAGING_SENDER_ID
+        # - name: REACT_APP_FIREBASE_ID
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: frontend-secret
+        #       key: REACT_APP_FIREBASE_ID
+        # - name: REACT_APP_FIREBASE_MEASUREMENT_ID
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: frontend-secret
+        #       key: REACT_APP_FIREBASE_MEASUREMENT_ID
+        # - name: REACT_APP_FIREBASE_WEB_PUSH_CERTIFICATE
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: frontend-secret
+        #       key: REACT_APP_FIREBASE_WEB_PUSH_CERTIFICATE
+

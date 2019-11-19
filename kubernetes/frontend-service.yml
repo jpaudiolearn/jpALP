@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jpalp-frontend-service
+  labels:
+    app: jpalp-frontend
+spec:
+  ports:
+    - port: 3000
+      protocol: TCP
+  selector:
+    app: jpalp-frontend
+  type: LoadBalancer
