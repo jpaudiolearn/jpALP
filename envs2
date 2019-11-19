@@ -3,3 +3,5 @@ GKE_CLUSTER=circleci-cd-demo-cluster
 GOOGLE_PROJECT_ID=kouzoh-p-k-zhu
 
 IMAGE_NAME_BACKEND=jpalp-backend:v2
+
+IMAGE_NAME_FRONTEND=jpalp-frontend:v2
