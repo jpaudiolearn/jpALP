@@ -27,7 +27,7 @@ class VocabTestUI extends Component {
   }
 
   getAllWords = () => {
-    let url = `http://35.190.224.222:8080/api/v1/words/${cookie.load('username')}`;
+    let url = `http://35.221.94.98:8080/api/v1/words/${cookie.load('username')}`;
     let wordPairsArr = []
     axios.get(url, { headers: {'Content-Type': "application/json"}})
           .then(response => {
@@ -149,7 +149,7 @@ class VocabTestUI extends Component {
   timeCompleteCallBack = () => {
     clearTimeout(this.timer)
     this.speech.cancel()
-    let url = `http://35.190.224.222:8080/api/v1/testInput`;
+    let url = `http://35.221.94.98:8080/api/v1/testInput`;
     let wordPairData = {
         'TotalQ': this.state.totalQues,
         'CorrectA': this.state.correctAns,

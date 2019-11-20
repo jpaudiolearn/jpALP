@@ -51,7 +51,7 @@ class WordInputUI extends Component {
   }
 
   postWordPair = (enWord, jpWord) => {
-    let url = `http://35.190.224.222:8080/api/v1/input`;
+    let url = `http://35.221.94.98:8080/api/v1/input`;
     let wordPairData = {
         'EN': enWord,
         'JP': jpWord,
@@ -69,7 +69,7 @@ class WordInputUI extends Component {
       this.sayWord("which in japanese is", 'en-US')
       
       // Now get the japanese translation
-      let url = `http://localhost:8080/api/v1/translate/${word}`;
+      let url = `http://35.221.94.98:8080/api/v1/translate/${word}`;
       let jpWord = ""
       axios.get(url, { headers: {'Content-Type': "application/json"}, signal: this.controller.signal})
           .then(response => {

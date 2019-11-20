@@ -23,7 +23,7 @@ export default class RevisionUI extends Component {
   }
 
   getAllWords = () => {
-    let url = `http://35.190.224.222:8080/api/v1/words/${cookie.load('username')}`;
+    let url = `http://35.221.94.98/:8080/api/v1/words/${cookie.load('username')}`;
     let wordPairsArr = []
     axios.get(url, { headers: {'Content-Type': "application/json"}})
           .then(response => {
