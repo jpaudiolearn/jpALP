@@ -36,50 +36,53 @@ export default class LoginUI extends Component {
 
   handle_login = (e, data) => {
     e.preventDefault();
-    fetch('http://localhost:8081/token-auth', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    })
-      .then(res => res.json()
-      ).then(json => {
-        if(json.token === undefined) {
-          this.setState({
-            isCorrect: false,
-          })
-        }
-        else {
-          cookie.save('token', json.token);
-          cookie.save('username', data.username);
-          this.setState({
-            logged_in: true,
-            displayed_form: '',
-            username: data.username
-          });
-          this.props.history.push("/homepage");
-        }
-      })
-      .catch( err => {
-        this.setState({
-        isCorrect: false,
-        });
-        console.log("Login Failed", err);
+    cookie.save('token', "ahjgshajsahjjhadummytoken")
+    cookie.save('username', data.username);
+    this.props.history.push("/homepage");
+    // fetch('http://localhost:8081/token-auth', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(data)
+    // })
+    //   .then(res => res.json()
+    //   ).then(json => {
+    //     if(json.token === undefined) {
+    //       this.setState({
+    //         isCorrect: false,
+    //       })
+    //     }
+    //     else {
+    //       cookie.save('token', json.token);
+    //       cookie.save('username', data.username);
+    //       this.setState({
+    //         logged_in: true,
+    //         displayed_form: '',
+    //         username: data.username
+    //       });
+    //       this.props.history.push("/homepage");
+    //     }
+    //   })
+    //   .catch( err => {
+    //     this.setState({
+    //     isCorrect: false,
+    //     });
+    //     console.log("Login Failed", err);
         
-      })
+    //   })
   };
 
-  handle_logout = () => {
-    cookie.remove('token');
-    this.setState({ logged_in: false, username: '' }, () => this.props.history.push('/login'));
-  };
+  // handle_logout = () => {
+  //   cookie.remove('token');
+  //   this.setState({ logged_in: false, username: '' }, () => this.props.history.push('/login'));
+  // };
 
-  display_form = form => {
-    this.setState({
-      displayed_form: form
-    });
-  };
+  // display_form = form => {
+  //   this.setState({
+  //     displayed_form: form
+  //   });
+  // };
 
   render() {
     let form = <LoginForm handle_login={this.handle_login} 
