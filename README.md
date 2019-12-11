@@ -1,10 +1,5 @@
-# JpALP V2
+# JpALP V2 [![CircleCI](https://circleci.com/gh/jpaudiolearn/jpALP.svg?style=svg)](https://circleci.com/gh/jpaudiolearn/jpALP)
 
-***
-
-[![CircleCI](https://circleci.com/gh/jpaudiolearn/jpALP.svg?style=svg)](https://circleci.com/gh/jpaudiolearn/jpALP)
-
-***
 
 ## You have just found the jpALP!
 The jpALP (short for Japanese Audio Learning Platform) is an app we developed to create a platform where Japanese learners can hone their speaking abilities on their own terms.
